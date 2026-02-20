@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// BETTER-AUTH CORE MODELS
+// ============================================================
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Professional profile (onboarding)
+  firstName           String?
+  lastName            String?
+  role                String?
+  company             String?
+  offerDescription    String?
+  idealTarget         String?
+  tone                Tone?
+  linkedinUrl         String?
+  onboardingCompleted Boolean @default(false)
+
+  sessions      Session[]
+  accounts      Account[]
+  prospectLists ProspectList[]
+  notifications Notification[]
+}
+
+enum Tone {
+  PROFESSIONAL
+  CASUAL
+  EXPERT
+  FRIENDLY
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+// ============================================================
+// UKLIO DOMAIN MODELS
+// ============================================================
+
+model ProspectList {
+  id               String     @id @default(cuid())
+  name             String
+  description      String?
+  defaultObjective Objective?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospects Prospect[]
+}
+
+enum Objective {
+  CALL
+  MEETING
+  SELL
+  TESTIMONIAL
+}
+
+enum ProspectStatus {
+  NEW
+  SEQUENCE_READY
+  IN_PROGRESS
+  WAITING
+  GOAL_REACHED
+  CLOSED
+}
+
+model Prospect {
+  id        String         @id @default(cuid())
+  status    ProspectStatus @default(NEW)
+  objective Objective?
+
+  // Required
+  firstName       String
+  lastName        String
+  linkedinUrl     String
+  currentPosition String
+  currentCompany  String
+
+  // Optional enrichment
+  profilePhotoUrl   String?
+  headline          String?
+  bio               String?
+  location          String?
+  pastExperiences   Json?
+  education         String?
+  skills            String?
+  languages         String?
+  services          String?
+  recentPosts       Json?
+  mutualConnections String?
+  connectionCount   Int?
+
+  // AI strategy
+  selectedContext  String?
+  contextDetail    String?
+  selectedStrategy String?
+  strategyDetail   String?
+
+  profileCompleteness Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listId       String
+  list         ProspectList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+  conversation Conversation?
+}
+
+model Conversation {
+  id            String @id @default(cuid())
+  currentStep   Int    @default(0)
+  followUpCount Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  prospectId String   @unique
+  prospect   Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  messages   Message[]
+}
+
+enum MessageType {
+  INITIAL
+  FOLLOW_UP_1
+  FOLLOW_UP_2
+  FOLLOW_UP_3
+  RESPONSE
+  AI_REPLY
+}
+
+enum MessageStatus {
+  DRAFT
+  SENT
+  RECEIVED
+}
+
+model Message {
+  id             String        @id @default(cuid())
+  type           MessageType
+  status         MessageStatus @default(DRAFT)
+  content        String
+  suggestedDelay String?
+  sentAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+}
+
+enum NotificationType {
+  FOLLOW_UP_DUE
+  NO_RESPONSE_14_DAYS
+  POSITIVE_RESPONSE
+  GOAL_REACHED
+}
+
+model Notification {
+  id         String           @id @default(cuid())
+  type       NotificationType
+  title      String
+  message    String
+  read       Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+  prospectId String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
+}
