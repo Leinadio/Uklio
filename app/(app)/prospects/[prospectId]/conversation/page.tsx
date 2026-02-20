@@ -22,7 +22,7 @@ export default async function ConversationPage({
     <div className="flex h-full flex-col">
       <div className="mb-4 flex items-center gap-4">
         <Link
-          href={`/lists/${prospect.listId}`}
+          href={`/campaigns/${prospect.campaignId}`}
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-1 h-4 w-4" />

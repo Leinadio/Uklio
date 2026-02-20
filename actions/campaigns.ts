@@ -4,51 +4,50 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
-import { createListSchema } from "@/lib/validations"
+import { createCampaignSchema } from "@/lib/validations"
 
-export async function createList(formData: FormData) {
+export async function createCampaign(formData: FormData) {
   const session = await getSession()
   if (!session) redirect("/login")
 
   const raw = {
     name: formData.get("name") as string,
     description: (formData.get("description") as string) || undefined,
-    defaultObjective:
-      (formData.get("defaultObjective") as string) || undefined,
+    defaultObjective: formData.get("defaultObjective") as string,
   }
 
-  const result = createListSchema.safeParse(raw)
+  const result = createCampaignSchema.safeParse(raw)
   if (!result.success) {
     return { error: result.error.flatten().fieldErrors }
   }
 
-  await prisma.prospectList.create({
+  await prisma.campaign.create({
     data: {
       ...result.data,
       userId: session.user.id,
     },
   })
 
-  revalidatePath("/lists")
+  revalidatePath("/campaigns")
   return { success: true }
 }
 
-export async function deleteList(listId: string) {
+export async function deleteCampaign(campaignId: string) {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  await prisma.prospectList.delete({
-    where: { id: listId, userId: session.user.id },
+  await prisma.campaign.delete({
+    where: { id: campaignId, userId: session.user.id },
   })
 
-  revalidatePath("/lists")
+  revalidatePath("/campaigns")
 }
 
-export async function getLists() {
+export async function getCampaigns() {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  return prisma.prospectList.findMany({
+  return prisma.campaign.findMany({
     where: { userId: session.user.id },
     include: {
       _count: { select: { prospects: true } },
@@ -57,12 +56,12 @@ export async function getLists() {
   })
 }
 
-export async function getListWithProspects(listId: string) {
+export async function getCampaignWithProspects(campaignId: string) {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  return prisma.prospectList.findUnique({
-    where: { id: listId, userId: session.user.id },
+  return prisma.campaign.findUnique({
+    where: { id: campaignId, userId: session.user.id },
     include: {
       prospects: {
         include: {

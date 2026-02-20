@@ -1,4 +1,4 @@
-import type { ProspectData, UserProfile } from "../types"
+import type { ProspectData } from "../types"
 
 interface Message {
   type: string
@@ -7,7 +7,7 @@ interface Message {
 }
 
 export function buildResponseAnalysisPrompt(
-  user: UserProfile,
+  userName: string,
   prospect: ProspectData,
   objective: string,
   context: string,
@@ -18,20 +18,12 @@ export function buildResponseAnalysisPrompt(
   const historyText = conversationHistory
     .map((m) => {
       const sender =
-        m.type === "RESPONSE" ? prospect.firstName : user.firstName
+        m.type === "RESPONSE" ? prospect.firstName : userName
       return `[${sender}] : ${m.content}`
     })
     .join("\n\n")
 
   return `Tu es un expert en prospection LinkedIn relationnelle. Tu dois analyser la réponse d'un prospect et générer le message suivant.
-
-## Profil de l'expéditeur
-
-- Nom : ${user.firstName} ${user.lastName}
-- Poste : ${user.role}
-- Entreprise : ${user.company}
-- Offre : ${user.offerDescription}
-- Ton souhaité : ${user.tone}
 
 ## Profil du prospect
 
@@ -88,7 +80,7 @@ Analyse la réponse du prospect et classe-la dans une de ces catégories :
 - Prends en compte TOUT l'historique
 - Ne mens jamais
 - Ne force jamais
-- Vouvoiement par défaut, sauf si le ton de la conversation est familier
+- Vouvoiement par défaut
 
 ## Format de réponse (JSON strict)
 

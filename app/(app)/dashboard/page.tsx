@@ -8,21 +8,11 @@ export default async function DashboardPage() {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  // Check onboarding
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { onboardingCompleted: true, firstName: true },
-  })
-
-  if (!user?.onboardingCompleted) {
-    redirect("/onboarding")
-  }
-
   // Get all prospects with conversations
   const prospects = await prisma.prospect.findMany({
-    where: { list: { userId: session.user.id } },
+    where: { campaign: { userId: session.user.id } },
     include: {
-      list: { select: { name: true } },
+      campaign: { select: { name: true } },
       conversation: {
         include: {
           messages: {
@@ -72,9 +62,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">
-          Bonjour {user.firstName || ""}
-        </h1>
+        <h1 className="text-2xl font-bold">Tableau de bord</h1>
         <p className="text-muted-foreground">
           Vue d&apos;ensemble de votre prospection.
         </p>

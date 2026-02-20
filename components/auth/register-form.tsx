@@ -41,14 +41,14 @@ export function RegisterForm() {
       return
     }
 
-    router.push("/onboarding")
+    router.push("/dashboard")
     router.refresh()
   }
 
   async function handleGoogleSignIn() {
     await signIn.social({
       provider: "google",
-      callbackURL: "/onboarding",
+      callbackURL: "/dashboard",
     })
   }
 

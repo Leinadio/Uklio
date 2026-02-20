@@ -12,33 +12,33 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { OBJECTIVE_LABELS } from "@/lib/constants"
 import { Users, ArrowRight, Trash2 } from "lucide-react"
-import { deleteList } from "@/actions/lists"
+import { deleteCampaign } from "@/actions/campaigns"
 import { toast } from "sonner"
 
-interface ListCardProps {
+interface CampaignCardProps {
   id: string
   name: string
   description?: string | null
-  defaultObjective?: string | null
+  defaultObjective: string
   prospectCount: number
 }
 
-export function ListCard({
+export function CampaignCard({
   id,
   name,
   description,
   defaultObjective,
   prospectCount,
-}: ListCardProps) {
+}: CampaignCardProps) {
   async function handleDelete(e: React.MouseEvent) {
     e.preventDefault()
-    if (!confirm("Supprimer cette liste et tous ses prospects ?")) return
-    await deleteList(id)
-    toast.success("Liste supprimée")
+    if (!confirm("Supprimer cette campagne et tous ses prospects ?")) return
+    await deleteCampaign(id)
+    toast.success("Campagne supprimée")
   }
 
   return (
-    <Link href={`/lists/${id}`}>
+    <Link href={`/campaigns/${id}`}>
       <Card className="transition-shadow hover:shadow-md">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
@@ -65,11 +65,9 @@ export function ListCard({
                 <Users className="h-4 w-4" />
                 {prospectCount} prospect{prospectCount !== 1 ? "s" : ""}
               </div>
-              {defaultObjective && (
-                <Badge variant="outline" className="text-xs">
-                  {OBJECTIVE_LABELS[defaultObjective]}
-                </Badge>
-              )}
+              <Badge variant="outline" className="text-xs">
+                {OBJECTIVE_LABELS[defaultObjective]}
+              </Badge>
             </div>
             <ArrowRight className="h-4 w-4 text-muted-foreground" />
           </div>

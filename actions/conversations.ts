@@ -13,12 +13,12 @@ export async function markMessageSent(messageId: string) {
     where: { id: messageId },
     include: {
       conversation: {
-        include: { prospect: { include: { list: true } } },
+        include: { prospect: { include: { campaign: true } } },
       },
     },
   })
 
-  if (!message || message.conversation.prospect.list.userId !== session.user.id) {
+  if (!message || message.conversation.prospect.campaign.userId !== session.user.id) {
     return { error: "Message introuvable" }
   }
 
@@ -73,12 +73,12 @@ export async function editMessage(messageId: string, content: string) {
     where: { id: messageId },
     include: {
       conversation: {
-        include: { prospect: { include: { list: true } } },
+        include: { prospect: { include: { campaign: true } } },
       },
     },
   })
 
-  if (!message || message.conversation.prospect.list.userId !== session.user.id) {
+  if (!message || message.conversation.prospect.campaign.userId !== session.user.id) {
     return { error: "Message introuvable" }
   }
 

@@ -20,28 +20,10 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  // Professional profile (onboarding)
-  firstName           String?
-  lastName            String?
-  role                String?
-  company             String?
-  offerDescription    String?
-  idealTarget         String?
-  tone                Tone?
-  linkedinUrl         String?
-  onboardingCompleted Boolean @default(false)
-
   sessions      Session[]
   accounts      Account[]
-  prospectLists ProspectList[]
+  campaigns     Campaign[]
   notifications Notification[]
-}
-
-enum Tone {
-  PROFESSIONAL
-  CASUAL
-  EXPERT
-  FRIENDLY
 }
 
 model Session {
@@ -88,13 +70,13 @@ model Verification {
 // UKLIO DOMAIN MODELS
 // ============================================================
 
-model ProspectList {
-  id               String     @id @default(cuid())
+model Campaign {
+  id               String    @id @default(cuid())
   name             String
   description      String?
-  defaultObjective Objective?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  defaultObjective Objective
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   userId    String
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -154,8 +136,8 @@ model Prospect {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  listId       String
-  list         ProspectList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+  campaignId   String
+  campaign     Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   conversation Conversation?
 }
 

@@ -33,7 +33,7 @@ function computeCompleteness(data: Record<string, unknown>): number {
 }
 
 export async function createProspect(data: {
-  listId: string
+  campaignId: string
   objective?: string
   firstName: string
   lastName: string
@@ -60,12 +60,12 @@ export async function createProspect(data: {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  // Verify list belongs to user
-  const list = await prisma.prospectList.findUnique({
-    where: { id: data.listId, userId: session.user.id },
+  // Verify campaign belongs to user
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: data.campaignId, userId: session.user.id },
   })
-  if (!list) {
-    return { error: "Liste introuvable" }
+  if (!campaign) {
+    return { error: "Campagne introuvable" }
   }
 
   const completeness = computeCompleteness(data)
@@ -78,7 +78,7 @@ export async function createProspect(data: {
     },
   })
 
-  revalidatePath(`/lists/${data.listId}`)
+  revalidatePath(`/campaigns/${data.campaignId}`)
   return { success: true, prospectId: prospect.id }
 }
 
@@ -90,7 +90,7 @@ export async function updateProspectStatus(
   if (!session) redirect("/login")
 
   const prospect = await prisma.prospect.findFirst({
-    where: { id: prospectId, list: { userId: session.user.id } },
+    where: { id: prospectId, campaign: { userId: session.user.id } },
   })
   if (!prospect) return { error: "Prospect introuvable" }
 
@@ -99,7 +99,7 @@ export async function updateProspectStatus(
     data: { status },
   })
 
-  revalidatePath(`/lists/${prospect.listId}`)
+  revalidatePath(`/campaigns/${prospect.campaignId}`)
   revalidatePath(`/prospects/${prospectId}`)
 }
 
@@ -117,7 +117,7 @@ export async function updateProspectStrategy(
   if (!session) redirect("/login")
 
   const prospect = await prisma.prospect.findFirst({
-    where: { id: prospectId, list: { userId: session.user.id } },
+    where: { id: prospectId, campaign: { userId: session.user.id } },
   })
   if (!prospect) return { error: "Prospect introuvable" }
 
@@ -132,7 +132,7 @@ export async function updateProspectStrategy(
     },
   })
 
-  revalidatePath(`/lists/${prospect.listId}`)
+  revalidatePath(`/campaigns/${prospect.campaignId}`)
 }
 
 export async function deleteProspect(prospectId: string) {
@@ -140,12 +140,12 @@ export async function deleteProspect(prospectId: string) {
   if (!session) redirect("/login")
 
   const prospect = await prisma.prospect.findFirst({
-    where: { id: prospectId, list: { userId: session.user.id } },
+    where: { id: prospectId, campaign: { userId: session.user.id } },
   })
   if (!prospect) return
 
   await prisma.prospect.delete({ where: { id: prospectId } })
-  revalidatePath(`/lists/${prospect.listId}`)
+  revalidatePath(`/campaigns/${prospect.campaignId}`)
 }
 
 export async function getProspect(prospectId: string) {
@@ -153,9 +153,9 @@ export async function getProspect(prospectId: string) {
   if (!session) redirect("/login")
 
   return prisma.prospect.findFirst({
-    where: { id: prospectId, list: { userId: session.user.id } },
+    where: { id: prospectId, campaign: { userId: session.user.id } },
     include: {
-      list: true,
+      campaign: true,
       conversation: {
         include: {
           messages: { orderBy: { createdAt: "asc" } },

@@ -8,33 +8,33 @@ import { ArrowLeft } from "lucide-react"
 export default async function NewProspectPage({
   params,
 }: {
-  params: Promise<{ listId: string }>
+  params: Promise<{ campaignId: string }>
 }) {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  const { listId } = await params
+  const { campaignId } = await params
 
-  const list = await prisma.prospectList.findUnique({
-    where: { id: listId, userId: session.user.id },
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: campaignId, userId: session.user.id },
     select: { id: true, name: true, defaultObjective: true },
   })
 
-  if (!list) notFound()
+  if (!campaign) notFound()
 
   return (
     <div>
       <Link
-        href={`/lists/${listId}`}
+        href={`/campaigns/${campaignId}`}
         className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="mr-1 h-4 w-4" />
-        Retour à {list.name}
+        Retour à {campaign.name}
       </Link>
       <h1 className="mb-6 text-2xl font-bold">Ajouter un prospect</h1>
       <ProspectWizard
-        listId={listId}
-        defaultObjective={list.defaultObjective || undefined}
+        campaignId={campaignId}
+        defaultObjective={campaign.defaultObjective}
       />
     </div>
   )

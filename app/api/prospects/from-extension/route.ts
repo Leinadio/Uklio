@@ -42,16 +42,16 @@ export async function POST(request: NextRequest) {
 
   const data = result.data
 
-  // Verify the list belongs to the user
-  const list = await prisma.prospectList.findUnique({
-    where: { id: data.listId, userId: session.user.id },
+  // Verify the campaign belongs to the user
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: data.campaignId, userId: session.user.id },
   })
 
-  if (!list) {
+  if (!campaign) {
     return withCors(
       request,
       NextResponse.json(
-        { error: "Liste introuvable ou non autorisée" },
+        { error: "Campagne introuvable ou non autorisée" },
         { status: 404 }
       )
     )
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     (filled / optionalFields.length) * 100
   )
 
-  const { listId, objective, ...prospectData } = data
+  const { campaignId, objective, ...prospectData } = data
 
   const prospect = await prisma.prospect.create({
     data: {
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       connectionCount: prospectData.connectionCount || null,
       objective: objective as "CALL" | "MEETING" | "SELL" | "TESTIMONIAL" | undefined,
       profileCompleteness,
-      listId,
+      campaignId,
     },
   })
 

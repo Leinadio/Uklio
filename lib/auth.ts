@@ -31,19 +31,6 @@ export const auth = betterAuth({
       maxAge: 5 * 60,
     },
   },
-  user: {
-    additionalFields: {
-      firstName: { type: "string", required: false },
-      lastName: { type: "string", required: false },
-      role: { type: "string", required: false },
-      company: { type: "string", required: false },
-      offerDescription: { type: "string", required: false },
-      idealTarget: { type: "string", required: false },
-      tone: { type: "string", required: false },
-      linkedinUrl: { type: "string", required: false },
-      onboardingCompleted: { type: "boolean", required: false },
-    },
-  },
 })
 
 export type Session = typeof auth.$Infer.Session

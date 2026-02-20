@@ -3,7 +3,7 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildSequenceGenerationPrompt } from "@/lib/ai/prompts/sequence-generation"
-import { OBJECTIVE_LABELS, TONE_LABELS } from "@/lib/constants"
+import { OBJECTIVE_LABELS } from "@/lib/constants"
 
 export async function POST(request: NextRequest) {
   const session = await getSession()
@@ -22,39 +22,10 @@ export async function POST(request: NextRequest) {
     strategyDetail,
   } = body
 
-  // Get user profile
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      firstName: true,
-      lastName: true,
-      role: true,
-      company: true,
-      offerDescription: true,
-      idealTarget: true,
-      tone: true,
-      linkedinUrl: true,
-    },
-  })
-
-  if (!user) {
-    return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 })
-  }
-
   const objectiveLabel = OBJECTIVE_LABELS[objective] || objective
-  const toneLabel = TONE_LABELS[user.tone || "PROFESSIONAL"] || user.tone || "Professionnel"
 
   const prompt = buildSequenceGenerationPrompt(
-    {
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      role: user.role || "",
-      company: user.company || "",
-      offerDescription: user.offerDescription || "",
-      idealTarget: user.idealTarget || "",
-      tone: toneLabel,
-      linkedinUrl: user.linkedinUrl || undefined,
-    },
+    session.user.name,
     prospect,
     objectiveLabel,
     context,

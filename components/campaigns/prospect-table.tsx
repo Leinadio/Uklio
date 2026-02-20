@@ -34,7 +34,7 @@ export function ProspectTable({ prospects }: { prospects: ProspectRow[] }) {
   if (prospects.length === 0) {
     return (
       <div className="rounded-md border p-8 text-center text-muted-foreground">
-        Aucun prospect dans cette liste. Commencez par en ajouter un.
+        Aucun prospect dans cette campagne. Commencez par en ajouter un.
       </div>
     )
   }

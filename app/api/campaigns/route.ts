@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const lists = await prisma.prospectList.findMany({
+  const campaigns = await prisma.campaign.findMany({
     where: { userId: session.user.id },
     include: {
       _count: { select: { prospects: true } },
@@ -30,5 +30,5 @@ export async function GET(request: NextRequest) {
     orderBy: { createdAt: "desc" },
   })
 
-  return withCors(request, NextResponse.json(lists))
+  return withCors(request, NextResponse.json(campaigns))
 }

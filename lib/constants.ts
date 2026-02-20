@@ -1,10 +1,3 @@
-export const TONE_LABELS: Record<string, string> = {
-  PROFESSIONAL: "Professionnel",
-  CASUAL: "Décontracté",
-  EXPERT: "Expert",
-  FRIENDLY: "Amical",
-}
-
 export const OBJECTIVE_LABELS: Record<string, string> = {
   CALL: "Obtenir un appel / visioconférence",
   MEETING: "Obtenir un rendez-vous physique",

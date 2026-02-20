@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { Sparkles } from "lucide-react"
-import { TONE_LABELS } from "@/lib/constants"
+
 import type { WizardState } from "./prospect-wizard"
 
 interface StrategySuggestion {
@@ -114,7 +114,7 @@ export function StepStrategy({ state, dispatch }: Props) {
                       {s.steps} étapes
                     </Badge>
                     <Badge variant="secondary" className="text-xs">
-                      {TONE_LABELS[s.toneIndicator] || s.toneIndicator}
+                      {s.toneIndicator}
                     </Badge>
                   </div>
                 </div>

@@ -1,20 +1,9 @@
 import { z } from "zod"
 
-export const onboardingSchema = z.object({
-  firstName: z.string().min(1, "Le prénom est requis"),
-  lastName: z.string().min(1, "Le nom est requis"),
-  role: z.string().min(1, "Le poste est requis"),
-  company: z.string().min(1, "L'entreprise est requise"),
-  offerDescription: z.string().min(1, "La description de l'offre est requise"),
-  idealTarget: z.string().min(1, "La cible idéale est requise"),
-  tone: z.enum(["PROFESSIONAL", "CASUAL", "EXPERT", "FRIENDLY"]),
-  linkedinUrl: z.string().url("URL invalide").optional().or(z.literal("")),
-})
-
-export const createListSchema = z.object({
-  name: z.string().min(1, "Le nom de la liste est requis"),
+export const createCampaignSchema = z.object({
+  name: z.string().min(1, "Le nom de la campagne est requis"),
   description: z.string().optional(),
-  defaultObjective: z.enum(["CALL", "MEETING", "SELL", "TESTIMONIAL"]).optional(),
+  defaultObjective: z.enum(["CALL", "MEETING", "SELL", "TESTIMONIAL"]),
 })
 
 export const prospectInfoSchema = z.object({
@@ -54,10 +43,9 @@ export const prospectInfoSchema = z.object({
 })
 
 export const extensionProspectSchema = prospectInfoSchema.extend({
-  listId: z.string().min(1, "L'ID de la liste est requis"),
+  campaignId: z.string().min(1, "L'ID de la campagne est requis"),
   objective: z.enum(["CALL", "MEETING", "SELL", "TESTIMONIAL"]).optional(),
 })
 
-export type OnboardingFormData = z.infer<typeof onboardingSchema>
-export type CreateListFormData = z.infer<typeof createListSchema>
+export type CreateCampaignFormData = z.infer<typeof createCampaignSchema>
 export type ProspectInfoFormData = z.infer<typeof prospectInfoSchema>

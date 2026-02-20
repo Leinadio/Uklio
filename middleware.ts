@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  if (pathname.startsWith("/api/lists")) {
+  if (pathname.startsWith("/api/campaigns")) {
     return NextResponse.next()
   }
 

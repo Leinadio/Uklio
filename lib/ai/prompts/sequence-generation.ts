@@ -1,7 +1,7 @@
-import type { ProspectData, UserProfile } from "../types"
+import type { ProspectData } from "../types"
 
 export function buildSequenceGenerationPrompt(
-  user: UserProfile,
+  userName: string,
   prospect: ProspectData,
   objective: string,
   context: string,
@@ -9,17 +9,7 @@ export function buildSequenceGenerationPrompt(
   strategy: string,
   strategyDetail: string
 ): string {
-  return `Tu es un expert en prospection LinkedIn relationnelle. Tu dois générer une séquence complète de 4 messages LinkedIn pour ${user.firstName} ${user.lastName}.
-
-## Profil de l'expéditeur (celui qui envoie les messages)
-
-- Nom : ${user.firstName} ${user.lastName}
-- Poste : ${user.role}
-- Entreprise : ${user.company}
-- Offre : ${user.offerDescription}
-- Cible idéale : ${user.idealTarget}
-- Ton souhaité : ${user.tone}
-${user.linkedinUrl ? `- LinkedIn : ${user.linkedinUrl}` : ""}
+  return `Tu es un expert en prospection LinkedIn relationnelle. Tu dois générer une séquence complète de 4 messages LinkedIn pour ${userName}.
 
 ## Profil du destinataire (le prospect)
 
@@ -50,14 +40,13 @@ ${strategyDetail ? `Détail : ${strategyDetail}` : ""}
 
 1. Le message initial utilise le CONTEXTE comme accroche naturelle — JAMAIS de "Bonjour, je me permets de vous contacter car..."
 2. Chaque message a UN SEUL objectif intermédiaire (engager → approfondir → proposer → conclure)
-3. Le ton est cohérent avec le profil de l'expéditeur et la stratégie choisie
-4. Les messages font entre 50 et 150 mots MAXIMUM (c'est LinkedIn, pas un email)
-5. Chaque relance apporte de la VALEUR NOUVELLE — JAMAIS un simple "je me permets de revenir vers vous"
-6. La progression vers l'objectif est graduelle et naturelle
-7. Pas de mensonge, pas de fausse familiarité
-8. Ne JAMAIS prétendre que l'expéditeur et le prospect se connaissent si ce n'est pas le cas
-9. Vouvoiement par défaut, sauf si le ton est "CASUAL" ou "FRIENDLY" (dans ce cas, tutoiement)
-10. Chaque message doit pouvoir fonctionner indépendamment (le prospect n'a peut-être pas lu le précédent)
+3. Les messages font entre 50 et 150 mots MAXIMUM (c'est LinkedIn, pas un email)
+4. Chaque relance apporte de la VALEUR NOUVELLE — JAMAIS un simple "je me permets de revenir vers vous"
+5. La progression vers l'objectif est graduelle et naturelle
+6. Pas de mensonge, pas de fausse familiarité
+7. Ne JAMAIS prétendre que l'expéditeur et le prospect se connaissent si ce n'est pas le cas
+8. Vouvoiement par défaut
+9. Chaque message doit pouvoir fonctionner indépendamment (le prospect n'a peut-être pas lu le précédent)
 
 ## Structure de la séquence
 

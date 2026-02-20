@@ -3,7 +3,7 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildResponseAnalysisPrompt } from "@/lib/ai/prompts/response-analysis"
-import { OBJECTIVE_LABELS, TONE_LABELS } from "@/lib/constants"
+import { OBJECTIVE_LABELS } from "@/lib/constants"
 import type { ProspectStatus } from "@/generated/prisma"
 
 export async function POST(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
   // Get full prospect data with conversation
   const prospect = await prisma.prospect.findFirst({
-    where: { id: prospectId, list: { userId: session.user.id } },
+    where: { id: prospectId, campaign: { userId: session.user.id } },
     include: {
       conversation: {
         include: {
@@ -31,27 +31,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Prospect non trouvé" }, { status: 404 })
   }
 
-  // Get user profile
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      firstName: true,
-      lastName: true,
-      role: true,
-      company: true,
-      offerDescription: true,
-      idealTarget: true,
-      tone: true,
-      linkedinUrl: true,
-    },
-  })
-
-  if (!user) {
-    return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 })
-  }
-
   const objectiveLabel = OBJECTIVE_LABELS[prospect.objective || "CALL"] || ""
-  const toneLabel = TONE_LABELS[user.tone || "PROFESSIONAL"] || ""
 
   // Get sent/received messages for history
   const sentMessages = prospect.conversation.messages
@@ -63,16 +43,7 @@ export async function POST(request: NextRequest) {
     }))
 
   const prompt = buildResponseAnalysisPrompt(
-    {
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      role: user.role || "",
-      company: user.company || "",
-      offerDescription: user.offerDescription || "",
-      idealTarget: user.idealTarget || "",
-      tone: toneLabel,
-      linkedinUrl: user.linkedinUrl || undefined,
-    },
+    session.user.name,
     {
       firstName: prospect.firstName,
       lastName: prospect.lastName,

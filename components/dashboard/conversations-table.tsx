@@ -25,8 +25,8 @@ interface ProspectRow {
   currentPosition: string
   objective: string | null
   status: string
-  listId: string
-  list: { name: string }
+  campaignId: string
+  campaign: { name: string }
   conversation: {
     currentStep: number
     messages: { createdAt: Date; status: string; sentAt: Date | null }[]
@@ -86,7 +86,7 @@ export function ConversationsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Prospect</TableHead>
-              <TableHead>Liste</TableHead>
+              <TableHead>Campagne</TableHead>
               <TableHead>Objectif</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Étape</TableHead>
@@ -129,7 +129,7 @@ export function ConversationsTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm">{p.list.name}</TableCell>
+                  <TableCell className="text-sm">{p.campaign.name}</TableCell>
                   <TableCell className="text-sm">
                     {p.objective
                       ? OBJECTIVE_LABELS[p.objective]

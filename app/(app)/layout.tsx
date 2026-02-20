@@ -17,21 +17,11 @@ export default async function AppLayout({
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { onboardingCompleted: true, name: true },
+    select: { name: true },
   })
 
   if (!user) {
     redirect("/login")
-  }
-
-  const isOnboardingPage =
-    typeof children === "object" && children !== null
-
-  // Check if we're already on the onboarding page to avoid redirect loops
-  // The middleware handles this, but as a safety net:
-  if (!user.onboardingCompleted) {
-    // We'll let the onboarding page render, but redirect other pages
-    // This is handled by checking the URL in a different way
   }
 
   return (

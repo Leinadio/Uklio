@@ -48,14 +48,3 @@ export interface ProspectData {
   recentPosts?: string
   mutualConnections?: string
 }
-
-export interface UserProfile {
-  firstName: string
-  lastName: string
-  role: string
-  company: string
-  offerDescription: string
-  idealTarget: string
-  tone: string
-  linkedinUrl?: string
-}

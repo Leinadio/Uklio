@@ -115,11 +115,11 @@ const STEPS = [
 ]
 
 interface Props {
-  listId: string
+  campaignId: string
   defaultObjective?: string
 }
 
-export function ProspectWizard({ listId, defaultObjective }: Props) {
+export function ProspectWizard({ campaignId, defaultObjective }: Props) {
   const router = useRouter()
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -156,7 +156,7 @@ export function ProspectWizard({ listId, defaultObjective }: Props) {
     // Create prospect if not already created
     if (!prospectId) {
       const result = await createProspect({
-        listId,
+        campaignId,
         firstName: state.firstName,
         lastName: state.lastName,
         linkedinUrl: state.linkedinUrl,
@@ -263,7 +263,7 @@ export function ProspectWizard({ listId, defaultObjective }: Props) {
         <SequenceDisplay
           prospectId={prospectId}
           state={state}
-          onDone={() => router.push(`/lists/${listId}`)}
+          onDone={() => router.push(`/campaigns/${campaignId}`)}
         />
       )}
 
@@ -277,7 +277,7 @@ export function ProspectWizard({ listId, defaultObjective }: Props) {
           ) : (
             <Button
               variant="outline"
-              onClick={() => router.push(`/lists/${listId}`)}
+              onClick={() => router.push(`/campaigns/${campaignId}`)}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Annuler

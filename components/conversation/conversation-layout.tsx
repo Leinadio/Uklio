@@ -26,7 +26,7 @@ interface Prospect {
   selectedContext: string | null
   selectedStrategy: string | null
   status: string
-  listId: string
+  campaignId: string
   linkedinUrl: string
   profilePhotoUrl: string | null
   headline: string | null
