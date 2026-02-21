@@ -23,7 +23,8 @@ interface Prospect {
   currentPosition: string
   currentCompany: string
   objective: string | null
-  selectedContext: string | null
+  signal: string | null
+  aiApproachAngle: string | null
   status: string
   linkedinUrl: string
   profilePhotoUrl: string | null
@@ -38,7 +39,7 @@ interface Prospect {
   recentPosts: unknown
   profileCompleteness: number
   services: string | null
-  mutualConnections: string | null
+  mutualConnections: unknown
   conversation: {
     id: string
     currentStep: number

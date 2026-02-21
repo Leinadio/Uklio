@@ -5,6 +5,7 @@ import { ProspectProfilePanel } from "@/components/prospects/prospect-profile-pa
 import { StatusBadge } from "@/components/prospects/status-badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { OBJECTIVE_LABELS } from "@/lib/constants"
 import { ArrowLeft, Play, MessageSquare } from "lucide-react"
 
 export default async function ProspectProfilePage({
@@ -26,7 +27,7 @@ export default async function ProspectProfilePage({
       : `/prospects/${prospectId}/conversation`
 
   const ctaLabel =
-    prospect.status === "NEW" ? "Configurer la stratégie" : "Voir la conversation"
+    prospect.status === "NEW" ? "Configurer le message" : "Voir la conversation"
 
   const CtaIcon = prospect.status === "NEW" ? Play : MessageSquare
 
@@ -47,7 +48,7 @@ export default async function ProspectProfilePage({
           <StatusBadge status={prospect.status} />
           {prospect.objective && (
             <span className="text-sm text-muted-foreground">
-              Objectif : {prospect.objective}
+              Objectif : {OBJECTIVE_LABELS[prospect.objective] || prospect.objective}
             </span>
           )}
         </div>

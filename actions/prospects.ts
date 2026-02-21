@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
-import type { ProspectStatus } from "@/generated/prisma"
+import type { ProspectStatus, Objective } from "@/generated/prisma"
 
 export async function updateProspectStatus(
   prospectId: string,
@@ -30,9 +30,8 @@ export async function updateProspectStatus(
 export async function updateProspectStrategy(
   prospectId: string,
   data: {
-    objective?: string
-    selectedContext?: string
-    contextDetail?: string
+    objective?: Objective
+    signal?: string
   }
 ) {
   const session = await getSession()
@@ -47,8 +46,7 @@ export async function updateProspectStrategy(
     where: { id: prospectId },
     data: {
       objective: data.objective,
-      selectedContext: data.selectedContext,
-      contextDetail: data.contextDetail,
+      signal: data.signal,
     },
   })
 

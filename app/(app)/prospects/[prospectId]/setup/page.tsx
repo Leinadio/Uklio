@@ -39,11 +39,10 @@ export default async function ProspectSetupPage({
     languages: prospect.languages ?? "",
     services: prospect.services ?? "",
     recentPosts: "",
-    mutualConnections: prospect.mutualConnections ?? "",
+    mutualConnections: "",
     connectionCount: prospect.connectionCount?.toString() ?? "",
     objective: prospect.objective ?? "",
-    selectedContext: "",
-    contextDetail: "",
+    signal: prospect.signal ?? "",
   }
 
   return (
@@ -57,7 +56,7 @@ export default async function ProspectSetupPage({
       </Link>
       <div className="mb-6">
         <h1 className="text-2xl font-bold">
-          Configurer la stratégie — {prospect.firstName} {prospect.lastName}
+          Configurer le message — {prospect.firstName} {prospect.lastName}
         </h1>
         <p className="text-muted-foreground">
           {prospect.currentPosition} chez {prospect.currentCompany}

@@ -1,3 +1,5 @@
+export type ObjectiveType = "CALL" | "MEETING" | "SELL" | "TESTIMONIAL"
+
 export interface WizardState {
   firstName: string
   lastName: string
@@ -16,7 +18,6 @@ export interface WizardState {
   recentPosts: string
   mutualConnections: string
   connectionCount: string
-  objective: string
-  selectedContext: string
-  contextDetail: string
+  objective: ObjectiveType | ""
+  signal: string
 }

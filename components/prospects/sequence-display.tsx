@@ -38,21 +38,8 @@ export function SequenceDisplay({ prospectId, state, onDone }: Props) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             prospectId,
-            prospect: {
-              firstName: state.firstName,
-              lastName: state.lastName,
-              currentPosition: state.currentPosition,
-              currentCompany: state.currentCompany,
-              headline: state.headline,
-              bio: state.bio,
-              skills: state.skills,
-              recentPosts: state.recentPosts,
-              mutualConnections: state.mutualConnections,
-              location: state.location,
-            },
             objective: state.objective,
-            context: state.selectedContext,
-            contextDetail: state.contextDetail,
+            signal: state.signal,
           }),
         })
         const data = await res.json()
@@ -72,7 +59,7 @@ export function SequenceDisplay({ prospectId, state, onDone }: Props) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Séquence de messages générée
+            Message généré
           </CardTitle>
           <CardDescription>
             Voici votre message initial prêt à être copié et envoyé sur LinkedIn.
@@ -101,7 +88,7 @@ export function SequenceDisplay({ prospectId, state, onDone }: Props) {
             </div>
           ) : (
             <p className="text-center text-muted-foreground">
-              Impossible de générer la séquence. Vérifiez votre clé API
+              Impossible de générer le message. Vérifiez votre clé API
               Anthropic.
             </p>
           )}

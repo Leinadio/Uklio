@@ -3,6 +3,7 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildResponseAnalysisPrompt } from "@/lib/ai/prompts/response-analysis"
+import { OBJECTIVE_LABELS } from "@/lib/constants"
 import type { ProspectStatus } from "@/generated/prisma"
 
 export async function POST(request: NextRequest) {
@@ -30,7 +31,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Prospect non trouvé" }, { status: 404 })
   }
 
-  const objectiveLabel = prospect.objective || ""
+  const objectiveLabel = prospect.objective
+    ? OBJECTIVE_LABELS[prospect.objective] || prospect.objective
+    : ""
 
   // Get sent/received messages for history
   const sentMessages = prospect.conversation.messages
@@ -52,8 +55,7 @@ export async function POST(request: NextRequest) {
       bio: prospect.bio || undefined,
     },
     objectiveLabel,
-    prospect.selectedContext || "",
-    "",
+    prospect.signal || "",
     sentMessages,
     prospectResponse
   )

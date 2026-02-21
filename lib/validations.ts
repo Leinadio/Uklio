@@ -32,12 +32,17 @@ export const prospectInfoSchema = z.object({
       })
     )
     .optional(),
-  mutualConnections: z.string().optional(),
+  mutualConnections: z
+    .array(
+      z.object({
+        name: z.string(),
+        headline: z.string().optional(),
+      })
+    )
+    .optional(),
   connectionCount: z.coerce.number().int().positive().optional(),
 })
 
-export const extensionProspectSchema = prospectInfoSchema.extend({
-  objective: z.string().optional(),
-})
+export const extensionProspectSchema = prospectInfoSchema
 
 export type ProspectInfoFormData = z.infer<typeof prospectInfoSchema>

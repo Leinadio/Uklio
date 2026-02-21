@@ -66,30 +66,30 @@ export async function POST(request: NextRequest) {
     (filled / optionalFields.length) * 100
   )
 
-  const { objective, ...prospectData } = data
-
   const prospect = await prisma.prospect.create({
     data: {
-      ...prospectData,
-      profilePhotoUrl: prospectData.profilePhotoUrl || null,
-      headline: prospectData.headline || null,
-      bio: prospectData.bio || null,
-      location: prospectData.location || null,
+      ...data,
+      profilePhotoUrl: data.profilePhotoUrl || null,
+      headline: data.headline || null,
+      bio: data.bio || null,
+      location: data.location || null,
       pastExperiences:
-        prospectData.pastExperiences && prospectData.pastExperiences.length > 0
-          ? prospectData.pastExperiences
+        data.pastExperiences && data.pastExperiences.length > 0
+          ? data.pastExperiences
           : undefined,
-      education: prospectData.education || null,
-      skills: prospectData.skills || null,
-      languages: prospectData.languages || null,
-      services: prospectData.services || null,
+      education: data.education || null,
+      skills: data.skills || null,
+      languages: data.languages || null,
+      services: data.services || null,
       recentPosts:
-        prospectData.recentPosts && prospectData.recentPosts.length > 0
-          ? prospectData.recentPosts
+        data.recentPosts && data.recentPosts.length > 0
+          ? data.recentPosts
           : undefined,
-      mutualConnections: prospectData.mutualConnections || null,
-      connectionCount: prospectData.connectionCount || null,
-      objective: objective || null,
+      mutualConnections:
+        data.mutualConnections && data.mutualConnections.length > 0
+          ? data.mutualConnections
+          : undefined,
+      connectionCount: data.connectionCount || null,
       profileCompleteness,
       userId: session.user.id,
     },

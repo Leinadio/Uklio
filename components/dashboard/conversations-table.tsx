@@ -14,7 +14,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StatusBadge } from "@/components/prospects/status-badge"
-import { STEP_LABELS } from "@/lib/constants"
+import { STEP_LABELS, OBJECTIVE_LABELS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { Eye } from "lucide-react"
 
@@ -125,8 +125,8 @@ export function ConversationsTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="max-w-[200px] truncate text-sm">
-                    {p.objective || "—"}
+                  <TableCell className="text-sm">
+                    {p.objective ? OBJECTIVE_LABELS[p.objective] || p.objective : "—"}
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={p.status} />

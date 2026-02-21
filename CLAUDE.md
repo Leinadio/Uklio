@@ -2,9 +2,9 @@
 
 ## Vision
 
-Uklio est un SaaS de prospection LinkedIn intelligente qui privilégie la **qualité relationnelle** plutôt que le volume. Contrairement aux outils de mass outreach (Waalaxy, Lemlist, La Growth Machine), Uklio construit une **stratégie conversationnelle sur mesure pour chaque prospect individuellement**.
+Uklio est un SaaS de prospection LinkedIn intelligente qui privilégie la **qualité relationnelle** plutôt que le volume. Contrairement aux outils de mass outreach (Waalaxy, Lemlist, La Growth Machine), Uklio génère des **messages personnalisés pour chaque prospect individuellement**.
 
-L'utilisateur ne cherche pas ses prospects dans Uklio. Il les trouve lui-même sur LinkedIn, puis utilise Uklio pour **construire et piloter une relation personnalisée** avec chacun d'eux.
+L'utilisateur ne cherche pas ses prospects dans Uklio. Il les trouve lui-même sur LinkedIn, puis utilise Uklio pour **engager et piloter une conversation personnalisée** avec chacun d'eux.
 
 Uklio **prépare** les messages — l'utilisateur garde le contrôle total et envoie lui-même sur LinkedIn.
 
@@ -22,36 +22,7 @@ Uklio **prépare** les messages — l'utilisateur garde le contrôle total et en
 
 ---
 
-## Framework central : Contexte → Stratégie → Objectif
-
-Tout le produit repose sur ce framework en trois piliers :
-
-### Contexte
-
-Ce que l'utilisateur observe chez le prospect — un signal, un événement, un point commun qui sert de point d'accroche naturel. C'est ce qui fait qu'un message Uklio ne ressemble pas à du spam.
-
-Exemples : le prospect recrute, connexion commune, a liké un post, participe à un salon, publie activement sur LinkedIn, annonce une levée de fonds, etc.
-
-### Stratégie
-
-L'approche relationnelle pour engager et faire progresser la conversation. Ce n'est pas un template, c'est une méthode :
-- **Demande d'avis expert** — solliciter l'expertise du prospect pour créer de la réciprocité
-- **Échange de valeur** — partager une ressource utile avant de proposer quoi que ce soit
-- **Mise en relation** — s'appuyer sur une connexion commune ou un événement partagé
-- **Félicitation + transition** — féliciter pour un accomplissement puis pivoter naturellement
-- **Approche collaborative** — proposer une collaboration mutuellement bénéfique
-
-### Objectif final
-
-Le résultat concret visé à l'issue de la séquence :
-- **Obtenir un appel / visioconférence** (`CALL`)
-- **Obtenir un rendez-vous physique** (`MEETING`)
-- **Vendre un produit ou service** (`SELL`)
-- **Obtenir un témoignage** (`TESTIMONIAL`)
-
----
-
-## Parcours utilisateur complet
+## Parcours utilisateur
 
 ### Étape 1 — Inscription / Connexion
 
@@ -59,13 +30,17 @@ L'utilisateur arrive directement sur la page de connexion / inscription (email +
 
 ### Étape 2 — Création d'une campagne
 
-Les campagnes organisent les prospects par thématique, cible ou objectif commercial. Chaque prospect appartient à une campagne et a sa propre stratégie indépendante.
+Les campagnes organisent les prospects par thématique, cible ou objectif commercial. Chaque prospect appartient à une campagne.
 
-À la création d'une campagne, le SaaS demande **en premier** l'objectif final (CALL, MEETING, SELL, TESTIMONIAL). L'utilisateur renseigne ensuite le nom et une description optionnelle.
+À la création d'une campagne, l'utilisateur renseigne le nom, une description optionnelle, et l'objectif par défaut (CALL, MEETING, SELL, TESTIMONIAL).
 
 Chaque campagne affiche un tableau : Prospect (nom + photo + poste) | Objectif | Statut (badge coloré) | Étape | Dernière action | Actions.
 
-### Étape 3 — Ajout d'un prospect (wizard multi-étapes)
+### Étape 3 — Ajout d'un prospect
+
+**Via l'extension Chrome (recommandé) :** l'utilisateur est sur le profil LinkedIn du prospect, clique sur l'extension, et toutes les données sont scrapées automatiquement.
+
+**Manuellement :** l'utilisateur renseigne les informations dans l'app.
 
 **Informations obligatoires :** prénom, nom, URL LinkedIn, poste actuel, entreprise actuelle.
 
@@ -73,51 +48,41 @@ Chaque campagne affiche un tableau : Prospect (nom + photo + poste) | Objectif |
 
 Un indicateur « Niveau de complétion du profil » encourage l'utilisateur à remplir un maximum. Plus il y a de données, plus l'IA est pertinente.
 
-L'extension Chrome peut remplir automatiquement tous ces champs en scrapant le profil LinkedIn.
+### Étape 4 — Objectif et signal
 
-### Étape 4 — Choix de l'objectif final
+**Objectif :** l'objectif de la campagne est pré-sélectionné mais modifiable prospect par prospect. 4 choix : CALL, MEETING, SELL, TESTIMONIAL.
 
-L'objectif de la campagne est pré-sélectionné mais modifiable prospect par prospect. 4 cartes cliquables (CALL, MEETING, SELL, TESTIMONIAL). L'objectif influence le ton, la structure et la progressivité de la séquence.
+**Signal (optionnel) :** un champ texte avec le label **"Il/elle vient de..."** et des exemples en placeholder : *"commenter mon post sur le SEO local", "changer de poste", "liker mon article sur Shopify"*.
 
-### Étape 5 — Sélection du contexte
+Le signal décrit une **action récente du prospect** qui sert de point d'accroche pour le message. C'est ce qui fait qu'un message Uklio ne ressemble pas à du spam.
 
-L'IA suggère automatiquement des contextes pertinents en fonction des données du profil, triés par score de pertinence. Si aucun ne convient, l'utilisateur peut décrire un contexte libre.
+- **Signal rempli** → l'IA génère un message personnalisé basé sur cette action concrète. Qualité maximale.
+- **Signal vide** → l'IA génère le meilleur message possible à partir des données du profil.
 
-Si le profil est très peu renseigné, l'IA génère des suggestions génériques basées sur le poste et le secteur.
+### Étape 5 — Génération du premier message
 
-### Étape 6 — Choix de la stratégie
+L'IA génère **un seul message** : le message initial. Pas de séquence pré-générée.
 
-L'IA propose 2 à 4 stratégies adaptées (objectif + contexte + profil). Chaque stratégie affiche : nom, description, nombre d'étapes, indicateur de ton.
+L'IA choisit automatiquement la meilleure stratégie d'approche (demande d'avis expert, échange de valeur, félicitation + transition, etc.) en fonction de l'objectif, du signal et des données du profil. L'utilisateur ne voit pas ce choix — c'est interne à l'IA.
 
-Récapitulatif complet avant génération : prospect + objectif + contexte + stratégie. L'utilisateur valide ou revient en arrière.
+Le message affiché dispose de : texte complet, bouton copier, bouton régénérer, zone d'édition.
 
-### Étape 7 — Génération de la séquence de messages
-
-L'IA génère une séquence complète :
-
-| Étape | Type | Délai suggéré |
-|-------|------|---------------|
-| 1 | Message initial | Immédiat |
-| 2 | Relance 1 | 3-5 jours |
-| 3 | Relance 2 | 5-7 jours |
-| 4 | Relance 3 (finale) | 7-10 jours |
-
-Chaque message a : texte complet, bouton copier, bouton régénérer, zone d'édition, délai suggéré.
-
-### Étape 8 — Exécution et suivi conversationnel
+### Étape 6 — Exécution et suivi conversationnel
 
 **Workflow :**
 1. L'utilisateur copie le message depuis Uklio et l'envoie sur LinkedIn
 2. Il clique « Message envoyé » pour l'horodater
 3. Quand le prospect répond, il copie-colle la réponse dans Uklio
-4. L'IA analyse la réponse et génère le message suivant adapté
-5. Si pas de réponse dans le délai, Uklio notifie et propose la relance
+4. L'IA analyse la réponse et génère le **message suivant adapté au contexte réel de la conversation**
+5. Si pas de réponse dans le délai, Uklio notifie et propose une relance
+
+**Les messages suivants sont toujours générés un par un**, en tenant compte de l'historique complet de la conversation. Jamais de séquence pré-générée.
 
 **Interface en deux parties :**
 - **Gauche (60%)** — Timeline chronologique : messages utilisateur (bleu, droite) + réponses prospect (gris, gauche), horodatage, badges de statut
-- **Droite (40%)** — Assistant IA : rappel objectif/contexte/stratégie, zone de collage de la réponse, message suivant suggéré, notifications de relance
+- **Droite (40%)** — Assistant IA : rappel objectif + signal, zone de collage de la réponse, message suivant suggéré, notifications de relance
 
-### Étape 9 — Tableau de bord
+### Étape 7 — Tableau de bord
 
 **4 KPIs :** prospects actifs, taux de réponse, objectifs atteints, taux de conversion global.
 
@@ -151,8 +116,8 @@ Chaque message a : texte complet, bouton copier, bouton régénérer, zone d'éd
 
 | Statut | Description | Badge |
 |--------|-------------|-------|
-| `NEW` | Prospect ajouté, pas encore de séquence | Gris |
-| `SEQUENCE_READY` | Séquence générée, premier message prêt | Bleu |
+| `NEW` | Prospect ajouté, pas encore de message | Gris |
+| `MESSAGE_READY` | Premier message généré, prêt à envoyer | Bleu |
 | `IN_PROGRESS` | Conversation active, échanges en cours | Bleu foncé |
 | `WAITING` | Message envoyé, en attente de réponse | Ambre/Orange |
 | `GOAL_REACHED` | Le prospect a accepté l'objectif | Vert |
@@ -160,27 +125,46 @@ Chaque message a : texte complet, bouton copier, bouton régénérer, zone d'éd
 
 ---
 
-## Règles de l'IA
+## Règles de l'IA (Mom Test)
+
+Les messages suivent la méthode du Mom Test avec le framework "Vision / Cadrage / Faiblesse / Piédestal / Aide".
 
 1. Jamais de message mensonger ou trompeur
 2. Ne jamais prétendre que l'utilisateur et le prospect se connaissent si ce n'est pas le cas
 3. Respecter les CGU de LinkedIn (pas de spam, pas de contenu commercial agressif)
-4. Privilégier les questions ouvertes aux affirmations dans les premiers messages
-5. Chaque relance apporte un élément nouveau — jamais un simple « je me permets de revenir vers vous »
-6. Messages courts : 50-150 mots maximum (format LinkedIn)
-7. Garder l'objectif final en tête mais ne jamais forcer
-8. Prendre en compte tout l'historique de la conversation pour chaque nouveau message
-9. Le message initial utilise le contexte comme accroche naturelle — jamais de « Bonjour, je me permets de vous contacter car... »
-10. Chaque message a un seul objectif intermédiaire (engager → approfondir → proposer → conclure)
-11. La progression vers l'objectif est graduelle et naturelle
-12. Vouvoiement par défaut, sauf ton « décontracté » ou « amical »
+4. JAMAIS parler du produit, service ou offre de l'utilisateur dans les messages (Mom Test)
+5. Chaque relance apporte un élément nouveau, jamais un simple « je me permets de revenir vers vous »
+6. Messages de 310 à 320 caractères exactement (espaces compris)
+7. Structure : 2 paragraphes + 1 question finale qui invite à répondre
+8. Garder l'objectif final en tête mais ne jamais le mentionner dans le message
+9. Prendre en compte tout l'historique de la conversation pour chaque nouveau message
+10. Le message commence toujours par "Salut [prénom]"
+11. Chaque message a un seul objectif intermédiaire (engager → approfondir → proposer → conclure)
+12. La progression vers l'objectif est graduelle et naturelle
+13. Tutoiement obligatoire, ton amical, registre familier/oral et conversationnel
+14. Ne JAMAIS toucher à l'ego du prospect ni faire ressortir ses faiblesses
+15. Montrer la propre vulnérabilité/difficulté de l'expéditeur pour justifier la demande d'aide
+16. Mettre le prospect sur un piédestal en tant qu'expert (Piédestal + Aide)
+17. JAMAIS de tiret dans les messages
+18. Pas de formules bateau : "J'ai remarqué que", "Je me permets de", "N'hésitez pas", "En tant que", "J'ai vu que"
+
+## Stratégies d'approche (internes à l'IA)
+
+L'IA choisit automatiquement la meilleure stratégie sans intervention de l'utilisateur :
+
+- **Demande d'avis expert** — solliciter l'expertise du prospect pour créer de la réciprocité
+- **Échange de valeur** — partager une ressource utile avant de proposer quoi que ce soit
+- **Mise en relation** — s'appuyer sur une connexion commune ou un événement partagé
+- **Félicitation + transition** — féliciter pour un accomplissement puis pivoter naturellement
+- **Approche collaborative** — proposer une collaboration mutuellement bénéfique
 
 ## Limites du système
 
 - Maximum 3 relances par prospect — au-delà, clôture automatique
 - Uklio prépare les messages mais ne les envoie pas (contrôle total de l'utilisateur)
 - L'IA a besoin au minimum de : prénom, nom, poste et entreprise du prospect
+- Les messages sont toujours générés un par un, jamais en séquence pré-générée
 
 ## Extension Chrome
 
-Repo séparé `uklio-extension`. L'extension scrape automatiquement les profils LinkedIn et envoie les données directement dans Uklio, évitant la saisie manuelle à l'étape 3.
+Repo séparé `uklio-extension`. L'extension fonctionne sur les pages profil LinkedIn. Elle scrape automatiquement les données du profil et les envoie directement dans Uklio, évitant la saisie manuelle.

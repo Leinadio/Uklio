@@ -7,16 +7,14 @@ import { Progress } from "@/components/ui/progress"
 import { toast } from "sonner"
 import { updateProspectStrategy } from "@/actions/prospects"
 import { StepObjective } from "./step-objective"
-import { StepContext } from "./step-context"
-import { StepRecap } from "./step-recap"
 import { SequenceDisplay } from "./sequence-display"
-import { ArrowLeft } from "lucide-react"
-import type { WizardState } from "@/lib/wizard-types"
+import { ArrowLeft, Loader2 } from "lucide-react"
+import type { WizardState, ObjectiveType } from "@/lib/wizard-types"
 
 type WizardAction =
   | { type: "UPDATE_FIELD"; field: keyof WizardState; value: string }
-  | { type: "SELECT_OBJECTIVE"; objective: string }
-  | { type: "SELECT_CONTEXT"; context: string; detail: string }
+  | { type: "SELECT_OBJECTIVE"; objective: ObjectiveType }
+  | { type: "SET_SIGNAL"; signal: string }
 
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -24,14 +22,14 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, [action.field]: action.value }
     case "SELECT_OBJECTIVE":
       return { ...state, objective: action.objective }
-    case "SELECT_CONTEXT":
-      return { ...state, selectedContext: action.context, contextDetail: action.detail }
+    case "SET_SIGNAL":
+      return { ...state, signal: action.signal }
     default:
       return state
   }
 }
 
-const STEPS = ["Objectif", "Contexte", "Récapitulatif", "Séquence"]
+const STEPS = ["Objectif", "Message"]
 
 interface Props {
   prospectId: string
@@ -44,21 +42,13 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  function canAdvance(): boolean {
-    switch (step) {
-      case 0: return !!state.objective
-      case 1: return !!state.selectedContext
-      case 2: return true
-      default: return true
-    }
-  }
+  async function handleGenerateMessage() {
+    if (!state.objective) return
 
-  async function handleGenerateSequence() {
     setLoading(true)
     const result = await updateProspectStrategy(prospectId, {
-      objective: state.objective,
-      selectedContext: state.selectedContext,
-      contextDetail: state.contextDetail,
+      objective: state.objective as ObjectiveType,
+      signal: state.signal,
     })
 
     if (result?.error) {
@@ -67,16 +57,8 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
       return
     }
 
-    setStep(3)
+    setStep(1)
     setLoading(false)
-  }
-
-  function handleNext() {
-    if (step === 2) {
-      handleGenerateSequence()
-    } else {
-      setStep((s) => s + 1)
-    }
   }
 
   const progress = ((step + 1) / STEPS.length) * 100
@@ -105,9 +87,7 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
       </div>
 
       {step === 0 && <StepObjective state={state} dispatch={dispatch} />}
-      {step === 1 && <StepContext state={state} dispatch={dispatch} />}
-      {step === 2 && <StepRecap state={state} />}
-      {step === 3 && (
+      {step === 1 && (
         <SequenceDisplay
           prospectId={prospectId}
           state={state}
@@ -115,25 +95,22 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
         />
       )}
 
-      {step < 3 && (
+      {step === 0 && (
         <div className="mt-6 flex justify-between">
-          {step > 0 ? (
-            <Button variant="outline" onClick={() => setStep((s) => s - 1)}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Précédent
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              onClick={() => router.push("/dashboard")}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Annuler
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            onClick={() => router.push("/dashboard")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Annuler
+          </Button>
 
-          <Button onClick={handleNext} disabled={!canAdvance() || loading}>
-            {step === 2 ? "Générer le message" : "Continuer"}
+          <Button
+            onClick={handleGenerateMessage}
+            disabled={!state.objective || loading}
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Générer le message
           </Button>
         </div>
       )}

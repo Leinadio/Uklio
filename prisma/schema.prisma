@@ -72,17 +72,24 @@ model Verification {
 
 enum ProspectStatus {
   NEW
-  SEQUENCE_READY
+  MESSAGE_READY
   IN_PROGRESS
   WAITING
   GOAL_REACHED
   CLOSED
 }
 
+enum Objective {
+  CALL
+  MEETING
+  SELL
+  TESTIMONIAL
+}
+
 model Prospect {
   id        String         @id @default(cuid())
   status    ProspectStatus @default(NEW)
-  objective String?
+  objective Objective?
 
   // Required
   firstName       String
@@ -102,12 +109,12 @@ model Prospect {
   languages         String?
   services          String?
   recentPosts       Json?
-  mutualConnections String?
+  mutualConnections Json?
   connectionCount   Int?
 
   // AI strategy
-  selectedContext  String?
-  contextDetail    String?
+  signal           String?
+  aiApproachAngle  String?
 
   profileCompleteness Int @default(0)
 

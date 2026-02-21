@@ -1,9 +1,25 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { deleteProspect } from "@/actions/prospects"
+import { toast } from "sonner"
 import {
   Linkedin,
   MapPin,
@@ -13,6 +29,7 @@ import {
   Users,
   Sparkles,
   FileText,
+  Trash2,
 } from "lucide-react"
 
 interface Experience {
@@ -29,6 +46,7 @@ interface RecentPost {
 
 interface ProspectProfilePanelProps {
   prospect: {
+    id: string
     firstName: string
     lastName: string
     currentPosition: string
@@ -100,7 +118,21 @@ function parsePosts(raw: unknown): RecentPost[] {
 }
 
 export function ProspectProfilePanel({ prospect }: ProspectProfilePanelProps) {
+  const router = useRouter()
+  const [deleting, setDeleting] = useState(false)
   const initials = `${prospect.firstName[0]}${prospect.lastName[0]}`.toUpperCase()
+
+  async function handleDelete() {
+    setDeleting(true)
+    try {
+      await deleteProspect(prospect.id)
+      toast.success("Prospect supprimé")
+      router.push("/dashboard")
+    } catch {
+      toast.error("Erreur lors de la suppression")
+      setDeleting(false)
+    }
+  }
 
   const pastExperiences = parseExperiences(prospect.pastExperiences)
 
@@ -292,6 +324,35 @@ export function ProspectProfilePanel({ prospect }: ProspectProfilePanelProps) {
           </Section>
         </>
       )}
+
+      <Separator />
+
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" size="sm" className="w-full text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Supprimer le prospect
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer {prospect.firstName} {prospect.lastName} ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. Le prospect, sa séquence de messages et tout l&apos;historique de conversation seront définitivement supprimés.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Suppression..." : "Supprimer"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

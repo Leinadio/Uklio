@@ -1,20 +1,5 @@
-export interface ContextSuggestion {
-  id: string
-  title: string
-  description: string
-  relevanceScore: number
-}
-
-export interface StrategySuggestion {
-  id: string
-  name: string
-  description: string
-  steps: number
-  toneIndicator: string
-}
-
 export interface GeneratedMessage {
-  type: "INITIAL" | "FOLLOW_UP_1" | "FOLLOW_UP_2" | "FOLLOW_UP_3"
+  type: "INITIAL"
   content: string
   suggestedDelay: string
 }
@@ -40,11 +25,12 @@ export interface ProspectData {
   headline?: string
   bio?: string
   location?: string
-  pastExperiences?: string
+  pastExperiences?: Array<{ title: string; company: string; duration?: string; location?: string }>
   education?: string
   skills?: string
   languages?: string
   services?: string
-  recentPosts?: string
-  mutualConnections?: string
+  recentPosts?: Array<{ content: string; date?: string }>
+  mutualConnections?: Array<{ name: string; headline?: string }>
+  connectionCount?: number
 }

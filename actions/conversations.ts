@@ -29,7 +29,7 @@ export async function markMessageSent(messageId: string) {
 
   // Update prospect status
   const prospect = message.conversation.prospect
-  if (prospect.status === "SEQUENCE_READY" || prospect.status === "NEW") {
+  if (prospect.status === "MESSAGE_READY" || prospect.status === "NEW") {
     await prisma.prospect.update({
       where: { id: prospect.id },
       data: { status: "WAITING" },

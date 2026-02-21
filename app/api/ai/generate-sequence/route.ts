@@ -3,6 +3,7 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildSequenceGenerationPrompt } from "@/lib/ai/prompts/sequence-generation"
+import type { ProspectData } from "@/lib/ai/types"
 
 export async function POST(request: NextRequest) {
   const session = await getSession()
@@ -11,20 +12,50 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const {
-    prospectId,
-    prospect,
-    objective,
-    context,
-    contextDetail,
-  } = body
+  const { prospectId } = body
+
+  if (!prospectId) {
+    return NextResponse.json({ error: "Données manquantes" }, { status: 400 })
+  }
+
+  const prospect = await prisma.prospect.findFirst({
+    where: { id: prospectId, userId: session.user.id },
+  })
+
+  if (!prospect) {
+    return NextResponse.json({ error: "Prospect non trouvé" }, { status: 404 })
+  }
+
+  const objective = body.objective || prospect.objective
+  const signal = body.signal || prospect.signal || ""
+
+  if (!objective) {
+    return NextResponse.json({ error: "Objectif manquant" }, { status: 400 })
+  }
+
+  const fullProspect: ProspectData = {
+    firstName: prospect.firstName,
+    lastName: prospect.lastName,
+    currentPosition: prospect.currentPosition,
+    currentCompany: prospect.currentCompany,
+    headline: prospect.headline || undefined,
+    bio: prospect.bio || undefined,
+    location: prospect.location || undefined,
+    pastExperiences: (prospect.pastExperiences as ProspectData["pastExperiences"]) || undefined,
+    education: prospect.education || undefined,
+    skills: prospect.skills || undefined,
+    languages: prospect.languages || undefined,
+    services: prospect.services || undefined,
+    recentPosts: (prospect.recentPosts as ProspectData["recentPosts"]) || undefined,
+    mutualConnections: (prospect.mutualConnections as ProspectData["mutualConnections"]) || undefined,
+    connectionCount: prospect.connectionCount || undefined,
+  }
 
   const prompt = buildSequenceGenerationPrompt(
     session.user.name,
-    prospect,
+    fullProspect,
     objective,
-    context,
-    contextDetail || ""
+    signal
   )
 
   try {
@@ -45,7 +76,7 @@ export async function POST(request: NextRequest) {
     const data = JSON.parse(jsonMatch[0])
 
     // Save only the INITIAL message and create conversation
-    if (prospectId && data.messages?.length > 0) {
+    if (data.messages?.length > 0) {
       const initialMessage = data.messages.find(
         (m: { type: string }) => m.type === "INITIAL"
       )
@@ -80,7 +111,10 @@ export async function POST(request: NextRequest) {
 
       await prisma.prospect.update({
         where: { id: prospectId },
-        data: { status: "SEQUENCE_READY" },
+        data: {
+          status: "MESSAGE_READY",
+          aiApproachAngle: data.approachAngle || null,
+        },
       })
     }
 

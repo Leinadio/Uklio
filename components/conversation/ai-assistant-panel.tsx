@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { StatusBadge } from "@/components/prospects/status-badge"
-import { STEP_LABELS } from "@/lib/constants"
+import { STEP_LABELS, OBJECTIVE_LABELS } from "@/lib/constants"
 import { toast } from "sonner"
 import {
   Sparkles,
@@ -32,7 +32,8 @@ interface Prospect {
   firstName: string
   lastName: string
   objective: string | null
-  selectedContext: string | null
+  signal: string | null
+  aiApproachAngle: string | null
   status: string
   conversation: {
     currentStep: number
@@ -125,14 +126,14 @@ export function AiAssistantPanel({ prospect, messages, onRefresh }: Props) {
             <Target className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Objectif :</span>
             <span className="font-medium">
-              {prospect.objective || "—"}
+              {prospect.objective ? OBJECTIVE_LABELS[prospect.objective] || prospect.objective : "—"}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground">Contexte :</span>
+            <span className="text-muted-foreground">Signal :</span>
             <span className="font-medium">
-              {prospect.selectedContext || "—"}
+              {prospect.signal || prospect.aiApproachAngle || "—"}
             </span>
           </div>
         </div>
