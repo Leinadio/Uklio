@@ -5,11 +5,9 @@ export function buildSequenceGenerationPrompt(
   prospect: ProspectData,
   objective: string,
   context: string,
-  contextDetail: string,
-  strategy: string,
-  strategyDetail: string
+  contextDetail: string
 ): string {
-  return `Tu es un expert en prospection LinkedIn relationnelle. Tu dois générer une séquence complète de 4 messages LinkedIn pour ${userName}.
+  return `Tu es un expert en prospection LinkedIn relationnelle. Tu dois générer un message initial LinkedIn court et percutant pour ${userName}.
 
 ## Profil du destinataire (le prospect)
 
@@ -31,31 +29,19 @@ ${objective}
 ${context}
 ${contextDetail ? `Détail : ${contextDetail}` : ""}
 
-## Stratégie choisie
-
-${strategy}
-${strategyDetail ? `Détail : ${strategyDetail}` : ""}
-
 ## Règles de rédaction STRICTES
 
-1. Le message initial utilise le CONTEXTE comme accroche naturelle — JAMAIS de "Bonjour, je me permets de vous contacter car..."
-2. Chaque message a UN SEUL objectif intermédiaire (engager → approfondir → proposer → conclure)
-3. Les messages font entre 50 et 150 mots MAXIMUM (c'est LinkedIn, pas un email)
-4. Chaque relance apporte de la VALEUR NOUVELLE — JAMAIS un simple "je me permets de revenir vers vous"
-5. La progression vers l'objectif est graduelle et naturelle
+1. Le message utilise le CONTEXTE comme accroche naturelle. JAMAIS de "Bonjour, je me permets de vous contacter car..."
+2. Le message a UN SEUL objectif : engager la conversation
+3. Le message fait entre 30 et 80 mots MAXIMUM. C'est un message LinkedIn conversationnel, PAS un email. Sois concis et direct.
+4. Tutoiement obligatoire
+5. Ton amical et décontracté, comme si tu écrivais à un pair que tu respectes. Pas de formules corporate.
 6. Pas de mensonge, pas de fausse familiarité
 7. Ne JAMAIS prétendre que l'expéditeur et le prospect se connaissent si ce n'est pas le cas
-8. Vouvoiement par défaut
-9. Chaque message doit pouvoir fonctionner indépendamment (le prospect n'a peut-être pas lu le précédent)
-
-## Structure de la séquence
-
-| Étape | Type | Objectif intermédiaire | Délai |
-|-------|------|----------------------|-------|
-| 1 | Message initial | Engager la conversation | Immédiat |
-| 2 | Relance 1 | Approfondir / relancer si pas de réponse | 3-5 jours |
-| 3 | Relance 2 | Proposer plus directement | 5-7 jours |
-| 4 | Relance 3 (finale) | Dernière tentative, laisser la porte ouverte | 7-10 jours |
+8. Terminer par UNE question ouverte courte et naturelle pour inviter la réponse
+9. Pas de "J'ai remarqué que", "Je me permets de", "N'hésitez pas", "En tant que" ou autres formules bateau
+10. JAMAIS de tiret dans le message. Utilise des points ou des virgules à la place.
+11. Aère le message avec des sauts de ligne entre les phrases ou groupes de phrases (utilise \n\n). Le message doit être visuellement léger et facile à lire sur mobile.
 
 ## Format de réponse (JSON strict)
 
@@ -67,21 +53,6 @@ Réponds UNIQUEMENT avec un JSON valide :
       "type": "INITIAL",
       "content": "Texte complet du message",
       "suggestedDelay": "Immédiat"
-    },
-    {
-      "type": "FOLLOW_UP_1",
-      "content": "Texte complet de la relance 1",
-      "suggestedDelay": "3-5 jours"
-    },
-    {
-      "type": "FOLLOW_UP_2",
-      "content": "Texte complet de la relance 2",
-      "suggestedDelay": "5-7 jours"
-    },
-    {
-      "type": "FOLLOW_UP_3",
-      "content": "Texte complet de la relance 3",
-      "suggestedDelay": "7-10 jours"
     }
   ]
 }`

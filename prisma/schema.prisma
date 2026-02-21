@@ -22,7 +22,7 @@ model User {
 
   sessions      Session[]
   accounts      Account[]
-  campaigns     Campaign[]
+  prospects     Prospect[]
   notifications Notification[]
 }
 
@@ -70,26 +70,6 @@ model Verification {
 // UKLIO DOMAIN MODELS
 // ============================================================
 
-model Campaign {
-  id               String    @id @default(cuid())
-  name             String
-  description      String?
-  defaultObjective Objective
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  prospects Prospect[]
-}
-
-enum Objective {
-  CALL
-  MEETING
-  SELL
-  TESTIMONIAL
-}
-
 enum ProspectStatus {
   NEW
   SEQUENCE_READY
@@ -102,7 +82,7 @@ enum ProspectStatus {
 model Prospect {
   id        String         @id @default(cuid())
   status    ProspectStatus @default(NEW)
-  objective Objective?
+  objective String?
 
   // Required
   firstName       String
@@ -128,16 +108,14 @@ model Prospect {
   // AI strategy
   selectedContext  String?
   contextDetail    String?
-  selectedStrategy String?
-  strategyDetail   String?
 
   profileCompleteness Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  campaignId   String
-  campaign     Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   conversation Conversation?
 }
 

@@ -3,7 +3,6 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildResponseAnalysisPrompt } from "@/lib/ai/prompts/response-analysis"
-import { OBJECTIVE_LABELS } from "@/lib/constants"
 import type { ProspectStatus } from "@/generated/prisma"
 
 export async function POST(request: NextRequest) {
@@ -17,7 +16,7 @@ export async function POST(request: NextRequest) {
 
   // Get full prospect data with conversation
   const prospect = await prisma.prospect.findFirst({
-    where: { id: prospectId, campaign: { userId: session.user.id } },
+    where: { id: prospectId, userId: session.user.id },
     include: {
       conversation: {
         include: {
@@ -31,7 +30,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Prospect non trouvé" }, { status: 404 })
   }
 
-  const objectiveLabel = OBJECTIVE_LABELS[prospect.objective || "CALL"] || ""
+  const objectiveLabel = prospect.objective || ""
 
   // Get sent/received messages for history
   const sentMessages = prospect.conversation.messages
@@ -54,7 +53,7 @@ export async function POST(request: NextRequest) {
     },
     objectiveLabel,
     prospect.selectedContext || "",
-    prospect.selectedStrategy || "",
+    "",
     sentMessages,
     prospectResponse
   )

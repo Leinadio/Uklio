@@ -5,9 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { OBJECTIVE_LABELS } from "@/lib/constants"
-import { User, Target, MessageSquare, Lightbulb } from "lucide-react"
-import type { WizardState } from "./prospect-wizard"
+import { User, Target, MessageSquare } from "lucide-react"
+import type { WizardState } from "@/lib/wizard-types"
 
 export function StepRecap({ state }: { state: WizardState }) {
   return (
@@ -15,7 +14,7 @@ export function StepRecap({ state }: { state: WizardState }) {
       <CardHeader>
         <CardTitle>Récapitulatif</CardTitle>
         <CardDescription>
-          Vérifiez les informations avant de générer la séquence de messages.
+          Vérifiez les informations avant de générer le message initial.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -41,7 +40,7 @@ export function StepRecap({ state }: { state: WizardState }) {
           <div>
             <p className="text-sm text-muted-foreground">Objectif</p>
             <p className="font-medium">
-              {OBJECTIVE_LABELS[state.objective] || state.objective}
+              {state.objective}
             </p>
           </div>
         </div>
@@ -56,21 +55,6 @@ export function StepRecap({ state }: { state: WizardState }) {
             {state.contextDetail && (
               <p className="text-sm text-muted-foreground">
                 {state.contextDetail}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
-            <Lightbulb className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Stratégie</p>
-            <p className="font-medium">{state.selectedStrategy}</p>
-            {state.strategyDetail && (
-              <p className="text-sm text-muted-foreground">
-                {state.strategyDetail}
               </p>
             )}
           </div>

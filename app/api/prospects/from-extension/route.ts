@@ -9,10 +9,9 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 // POST /api/prospects/from-extension
-// Accepts prospect data from the Chrome extension (V2)
+// Accepts prospect data from the Chrome extension
 // Auth: Bearer token from Better-Auth session
 export async function POST(request: NextRequest) {
-  // Authenticate via session cookie or Bearer token
   const session = await auth.api.getSession({
     headers: request.headers,
   })
@@ -42,21 +41,6 @@ export async function POST(request: NextRequest) {
 
   const data = result.data
 
-  // Verify the campaign belongs to the user
-  const campaign = await prisma.campaign.findUnique({
-    where: { id: data.campaignId, userId: session.user.id },
-  })
-
-  if (!campaign) {
-    return withCors(
-      request,
-      NextResponse.json(
-        { error: "Campagne introuvable ou non autorisée" },
-        { status: 404 }
-      )
-    )
-  }
-
   // Compute profile completeness
   const optionalFields = [
     "profilePhotoUrl",
@@ -82,7 +66,7 @@ export async function POST(request: NextRequest) {
     (filled / optionalFields.length) * 100
   )
 
-  const { campaignId, objective, ...prospectData } = data
+  const { objective, ...prospectData } = data
 
   const prospect = await prisma.prospect.create({
     data: {
@@ -105,9 +89,9 @@ export async function POST(request: NextRequest) {
           : undefined,
       mutualConnections: prospectData.mutualConnections || null,
       connectionCount: prospectData.connectionCount || null,
-      objective: objective as "CALL" | "MEETING" | "SELL" | "TESTIMONIAL" | undefined,
+      objective: objective || null,
       profileCompleteness,
-      campaignId,
+      userId: session.user.id,
     },
   })
 

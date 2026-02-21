@@ -24,9 +24,7 @@ interface Prospect {
   currentCompany: string
   objective: string | null
   selectedContext: string | null
-  selectedStrategy: string | null
   status: string
-  campaignId: string
   linkedinUrl: string
   profilePhotoUrl: string | null
   headline: string | null

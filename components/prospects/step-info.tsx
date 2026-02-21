@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
-import type { WizardState } from "./prospect-wizard"
+import type { WizardState } from "@/lib/wizard-types"
 
 const OPTIONAL_FIELDS = [
   "profilePhotoUrl",

@@ -8,11 +8,9 @@ export default async function DashboardPage() {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  // Get all prospects with conversations
   const prospects = await prisma.prospect.findMany({
-    where: { campaign: { userId: session.user.id } },
+    where: { userId: session.user.id },
     include: {
-      campaign: { select: { name: true } },
       conversation: {
         include: {
           messages: {
@@ -25,7 +23,6 @@ export default async function DashboardPage() {
     orderBy: { updatedAt: "desc" },
   })
 
-  // Compute KPIs
   const activeProspects = prospects.filter(
     (p) => p.status === "IN_PROGRESS" || p.status === "WAITING"
   ).length
@@ -76,7 +73,7 @@ export default async function DashboardPage() {
       />
 
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">Conversations</h2>
+        <h2 className="mb-4 text-lg font-semibold">Prospects</h2>
         <ConversationsTable prospects={prospects} />
       </div>
     </div>

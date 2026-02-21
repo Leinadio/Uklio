@@ -3,7 +3,6 @@ import { getSession } from "@/lib/get-session"
 import prisma from "@/lib/prisma"
 import anthropic from "@/lib/ai/client"
 import { buildSequenceGenerationPrompt } from "@/lib/ai/prompts/sequence-generation"
-import { OBJECTIVE_LABELS } from "@/lib/constants"
 
 export async function POST(request: NextRequest) {
   const session = await getSession()
@@ -18,26 +17,20 @@ export async function POST(request: NextRequest) {
     objective,
     context,
     contextDetail,
-    strategy,
-    strategyDetail,
   } = body
-
-  const objectiveLabel = OBJECTIVE_LABELS[objective] || objective
 
   const prompt = buildSequenceGenerationPrompt(
     session.user.name,
     prospect,
-    objectiveLabel,
+    objective,
     context,
-    contextDetail || "",
-    strategy,
-    strategyDetail || ""
+    contextDetail || ""
   )
 
   try {
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 4000,
+      max_tokens: 1000,
       messages: [{ role: "user", content: prompt }],
     })
 
@@ -51,43 +44,47 @@ export async function POST(request: NextRequest) {
 
     const data = JSON.parse(jsonMatch[0])
 
-    // Save messages to the database and create conversation
+    // Save only the INITIAL message and create conversation
     if (prospectId && data.messages?.length > 0) {
-      // Create conversation if it doesn't exist
+      const initialMessage = data.messages.find(
+        (m: { type: string }) => m.type === "INITIAL"
+      )
+      if (!initialMessage) {
+        return NextResponse.json({ messages: [] })
+      }
+
       let conversation = await prisma.conversation.findUnique({
         where: { prospectId },
       })
 
       if (!conversation) {
         conversation = await prisma.conversation.create({
-          data: {
-            prospectId,
-            currentStep: 1,
-          },
+          data: { prospectId },
         })
       }
 
-      // Create messages
-      for (const msg of data.messages) {
-        await prisma.message.create({
-          data: {
-            conversationId: conversation.id,
-            type: msg.type,
-            content: msg.content,
-            suggestedDelay: msg.suggestedDelay,
-            status: "DRAFT",
-          },
-        })
-      }
+      // Delete any existing draft messages before saving new one
+      await prisma.message.deleteMany({
+        where: { conversationId: conversation.id, status: "DRAFT" },
+      })
 
-      // Update prospect status
+      await prisma.message.create({
+        data: {
+          conversationId: conversation.id,
+          type: "INITIAL",
+          content: initialMessage.content,
+          suggestedDelay: initialMessage.suggestedDelay,
+          status: "DRAFT",
+        },
+      })
+
       await prisma.prospect.update({
         where: { id: prospectId },
         data: { status: "SEQUENCE_READY" },
       })
     }
 
-    return NextResponse.json(data)
+    return NextResponse.json({ messages: data.messages?.slice(0, 1) || [] })
   } catch (error) {
     console.error("AI sequence generation error:", error)
     return NextResponse.json({ messages: [] })

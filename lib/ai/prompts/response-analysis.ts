@@ -11,7 +11,7 @@ export function buildResponseAnalysisPrompt(
   prospect: ProspectData,
   objective: string,
   context: string,
-  strategy: string,
+  _strategy: string,
   conversationHistory: Message[],
   prospectResponse: string
 ): string {
@@ -35,7 +35,6 @@ ${prospect.headline ? `- Headline : ${prospect.headline}` : ""}
 
 - Objectif final : ${objective}
 - Contexte d'approche : ${context}
-- Stratégie : ${strategy}
 
 ## Historique de la conversation
 
@@ -49,7 +48,7 @@ ${prospectResponse}
 
 Analyse la réponse du prospect et classe-la dans une de ces catégories :
 
-1. **positive** (ex : "Oui, intéressant, dites-m'en plus")
+1. **positive** (ex : "Oui, intéressant, dis-m'en plus")
    → Génère un message d'approfondissement qui avance vers l'objectif
    → Statut suggéré : IN_PROGRESS
 
@@ -65,22 +64,25 @@ Analyse la réponse du prospect et classe-la dans une de ces catégories :
    → Génère un message de clôture élégant qui laisse la porte ouverte
    → Statut suggéré : CLOSED
 
-5. **negative_firm** (ex : "Non merci", "Arrêtez")
+5. **negative_firm** (ex : "Non merci", "Arrête")
    → Génère un message de remerciement bref et courtois
    → Statut suggéré : CLOSED
 
-6. **acceptance** (ex : "OK pour un call", "Envoyez-moi le lien")
+6. **acceptance** (ex : "OK pour un call", "Envoie-moi le lien")
    → Génère un message de confirmation avec détails pratiques
    → Statut suggéré : GOAL_REACHED
 
 ## Règles
 
-- Le message fait entre 50 et 150 mots
+- Le message fait entre 30 et 80 mots. Concis et conversationnel.
+- Tutoiement obligatoire
+- Ton amical et décontracté, comme un pair. Pas de formules corporate.
 - Le ton reste cohérent avec la conversation
 - Prends en compte TOUT l'historique
 - Ne mens jamais
 - Ne force jamais
-- Vouvoiement par défaut
+- JAMAIS de tiret dans le message. Utilise des points ou des virgules.
+- Aère le message avec des sauts de ligne entre les phrases (utilise \n\n). Visuellement léger pour mobile.
 
 ## Format de réponse (JSON strict)
 

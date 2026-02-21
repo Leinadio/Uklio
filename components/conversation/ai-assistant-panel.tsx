@@ -7,16 +7,14 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { StatusBadge } from "@/components/prospects/status-badge"
-import { OBJECTIVE_LABELS, STEP_LABELS } from "@/lib/constants"
+import { STEP_LABELS } from "@/lib/constants"
 import { toast } from "sonner"
 import {
   Sparkles,
   Target,
   MessageSquare,
-  Lightbulb,
   Copy,
   Loader2,
-  Send,
 } from "lucide-react"
 
 interface Message {
@@ -35,7 +33,6 @@ interface Prospect {
   lastName: string
   objective: string | null
   selectedContext: string | null
-  selectedStrategy: string | null
   status: string
   conversation: {
     currentStep: number
@@ -128,7 +125,7 @@ export function AiAssistantPanel({ prospect, messages, onRefresh }: Props) {
             <Target className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Objectif :</span>
             <span className="font-medium">
-              {OBJECTIVE_LABELS[prospect.objective || ""] || "—"}
+              {prospect.objective || "—"}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -136,13 +133,6 @@ export function AiAssistantPanel({ prospect, messages, onRefresh }: Props) {
             <span className="text-muted-foreground">Contexte :</span>
             <span className="font-medium">
               {prospect.selectedContext || "—"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Lightbulb className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground">Stratégie :</span>
-            <span className="font-medium">
-              {prospect.selectedStrategy || "—"}
             </span>
           </div>
         </div>

@@ -1,16 +1,15 @@
-export const OBJECTIVE_LABELS: Record<string, string> = {
-  CALL: "Obtenir un appel / visioconférence",
-  MEETING: "Obtenir un rendez-vous physique",
-  SELL: "Vendre un produit ou service",
-  TESTIMONIAL: "Obtenir un témoignage",
-}
-
-export const OBJECTIVE_DESCRIPTIONS: Record<string, string> = {
-  CALL: "Planifier un échange vocal ou vidéo pour présenter votre offre ou qualifier le prospect",
-  MEETING: "Décrocher une rencontre en personne pour approfondir la relation",
-  SELL: "Amener le prospect à passer commande ou signer directement via l'échange LinkedIn",
-  TESTIMONIAL: "Convaincre le prospect de tester le produit et de fournir un retour d'expérience",
-}
+export const CONTEXT_OPTIONS = [
+  { id: "recruiting", title: "Le prospect recrute", description: "Il recrute à un poste marketing ou commercial — signal d'activité et de croissance." },
+  { id: "mutual", title: "Connexion commune", description: "Vous avez une connaissance en commun qui peut servir de point d'accroche naturel." },
+  { id: "liked-post", title: "A liké ou commenté votre post", description: "Il a interagi avec un de vos contenus LinkedIn récemment." },
+  { id: "networking", title: "Même club de réseautage", description: "Vous êtes dans le même réseau ou club de la même ville." },
+  { id: "event", title: "A participé à un salon récemment", description: "Il était présent à un événement professionnel récent." },
+  { id: "active-publisher", title: "Publie souvent sur LinkedIn", description: "Il est actif et publie régulièrement du contenu sur LinkedIn." },
+  { id: "ai-comment", title: "A commenté un article sur l'IA", description: "Il s'intéresse à l'IA et a commenté un article ou post sur le sujet." },
+  { id: "funding", title: "Levée de fonds annoncée", description: "Son entreprise vient d'annoncer une levée de fonds sur son profil." },
+  { id: "speaker", title: "Fait des formations ou conférences", description: "Il intervient régulièrement comme formateur ou conférencier." },
+  { id: "event-photo", title: "Photo lors d'un événement", description: "Il a publié une photo avec quelqu'un lors d'un événement récent." },
+]
 
 export const STATUS_LABELS: Record<string, string> = {
   NEW: "Nouveau",

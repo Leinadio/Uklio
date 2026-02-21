@@ -1,11 +1,5 @@
 import { z } from "zod"
 
-export const createCampaignSchema = z.object({
-  name: z.string().min(1, "Le nom de la campagne est requis"),
-  description: z.string().optional(),
-  defaultObjective: z.enum(["CALL", "MEETING", "SELL", "TESTIMONIAL"]),
-})
-
 export const prospectInfoSchema = z.object({
   firstName: z.string().min(1, "Le prénom est requis"),
   lastName: z.string().min(1, "Le nom est requis"),
@@ -43,9 +37,7 @@ export const prospectInfoSchema = z.object({
 })
 
 export const extensionProspectSchema = prospectInfoSchema.extend({
-  campaignId: z.string().min(1, "L'ID de la campagne est requis"),
-  objective: z.enum(["CALL", "MEETING", "SELL", "TESTIMONIAL"]).optional(),
+  objective: z.string().optional(),
 })
 
-export type CreateCampaignFormData = z.infer<typeof createCampaignSchema>
 export type ProspectInfoFormData = z.infer<typeof prospectInfoSchema>

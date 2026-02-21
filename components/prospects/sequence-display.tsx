@@ -12,7 +12,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { MessageCard } from "./message-card"
 import { Sparkles, ArrowRight } from "lucide-react"
-import type { WizardState } from "./prospect-wizard"
+import type { WizardState } from "@/lib/wizard-types"
 
 interface GeneratedMessage {
   type: string
@@ -53,8 +53,6 @@ export function SequenceDisplay({ prospectId, state, onDone }: Props) {
             objective: state.objective,
             context: state.selectedContext,
             contextDetail: state.contextDetail,
-            strategy: state.selectedStrategy,
-            strategyDetail: state.strategyDetail,
           }),
         })
         const data = await res.json()
@@ -77,14 +75,14 @@ export function SequenceDisplay({ prospectId, state, onDone }: Props) {
             Séquence de messages générée
           </CardTitle>
           <CardDescription>
-            Voici vos 4 messages prêts à être copiés et envoyés sur LinkedIn.
-            Vous pouvez les modifier avant envoi.
+            Voici votre message initial prêt à être copié et envoyé sur LinkedIn.
+            Vous pouvez le modifier avant envoi.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => (
+              {[1].map((i) => (
                 <Skeleton key={i} className="h-32 w-full" />
               ))}
             </div>

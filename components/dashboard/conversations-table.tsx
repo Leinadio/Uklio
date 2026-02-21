@@ -14,7 +14,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StatusBadge } from "@/components/prospects/status-badge"
-import { OBJECTIVE_LABELS, STEP_LABELS } from "@/lib/constants"
+import { STEP_LABELS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { Eye } from "lucide-react"
 
@@ -25,8 +25,6 @@ interface ProspectRow {
   currentPosition: string
   objective: string | null
   status: string
-  campaignId: string
-  campaign: { name: string }
   conversation: {
     currentStep: number
     messages: { createdAt: Date; status: string; sentAt: Date | null }[]
@@ -51,7 +49,6 @@ export function ConversationsTable({
   const filtered = prospects.filter((p) => {
     if (filter === "all") return true
     if (filter === "follow_up") {
-      // Prospect is waiting and the last sent message is >3 days old
       if (p.status !== "WAITING") return false
       const lastSent = p.conversation?.messages.find(
         (m) => m.status === "SENT" && m.sentAt
@@ -79,14 +76,13 @@ export function ConversationsTable({
 
       {filtered.length === 0 ? (
         <div className="rounded-md border p-8 text-center text-muted-foreground">
-          Aucune conversation pour ce filtre.
+          Aucun prospect pour ce filtre.
         </div>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Prospect</TableHead>
-              <TableHead>Campagne</TableHead>
               <TableHead>Objectif</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Étape</TableHead>
@@ -129,11 +125,8 @@ export function ConversationsTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm">{p.campaign.name}</TableCell>
-                  <TableCell className="text-sm">
-                    {p.objective
-                      ? OBJECTIVE_LABELS[p.objective]
-                      : "—"}
+                  <TableCell className="max-w-[200px] truncate text-sm">
+                    {p.objective || "—"}
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={p.status} />
@@ -148,7 +141,7 @@ export function ConversationsTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon" asChild>
-                      <Link href={`/prospects/${p.id}/conversation`}>
+                      <Link href={`/prospects/${p.id}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
                     </Button>
