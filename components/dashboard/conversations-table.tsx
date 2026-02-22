@@ -25,6 +25,7 @@ interface ProspectRow {
   currentPosition: string
   objective: string | null
   status: string
+  campaign: { id: string; name: string } | null
   conversation: {
     currentStep: number
     messages: { createdAt: Date; status: string; sentAt: Date | null }[]
@@ -83,6 +84,7 @@ export function ConversationsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Prospect</TableHead>
+              <TableHead>Campagne</TableHead>
               <TableHead>Objectif</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Étape</TableHead>
@@ -124,6 +126,18 @@ export function ConversationsTable({
                         </p>
                       </div>
                     </div>
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {p.campaign ? (
+                      <Link
+                        href={`/campaigns/${p.campaign.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {p.campaign.name}
+                      </Link>
+                    ) : (
+                      "—"
+                    )}
                   </TableCell>
                   <TableCell className="text-sm">
                     {p.objective ? OBJECTIVE_LABELS[p.objective] || p.objective : "—"}

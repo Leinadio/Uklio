@@ -11,6 +11,7 @@ export default async function DashboardPage() {
   const prospects = await prisma.prospect.findMany({
     where: { userId: session.user.id },
     include: {
+      campaign: { select: { id: true, name: true } },
       conversation: {
         include: {
           messages: {

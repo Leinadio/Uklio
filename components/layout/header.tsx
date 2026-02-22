@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, MessageSquare, LayoutDashboard, List, Settings } from "lucide-react"
+import { Menu, MessageSquare, LayoutDashboard, Megaphone, Settings } from "lucide-react"
 import { UserMenu } from "@/components/layout/user-menu"
 import { useState } from "react"
 
 const navItems = [
   { label: "Tableau de bord", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Listes", href: "/lists", icon: List },
+  { label: "Campagnes", href: "/campaigns", icon: Megaphone },
   { label: "Paramètres", href: "/settings", icon: Settings },
 ]
 

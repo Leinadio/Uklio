@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
   const prospect = await prisma.prospect.findFirst({
     where: { id: prospectId, userId: session.user.id },
     include: {
+      campaign: { select: { offer: true } },
       conversation: {
         include: {
           messages: { orderBy: { createdAt: "asc" } },
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
     },
     objectiveLabel,
     prospect.signal || "",
+    prospect.campaign?.offer || "",
     sentMessages,
     prospectResponse
   )

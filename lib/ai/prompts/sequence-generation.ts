@@ -11,7 +11,8 @@ export function buildSequenceGenerationPrompt(
   userName: string,
   prospect: ProspectData,
   objective: string,
-  signal: string
+  signal: string,
+  offer: string
 ): string {
   const objectiveText = objectiveLabels[objective] || objective
   const experiencesText = prospect.pastExperiences
@@ -63,6 +64,8 @@ L'objectif est un guide interne pour orienter la conversation. Il ne doit JAMAIS
 
 ${signal ? `## Signal détecté\n\nLe prospect vient de : ${signal}\n\nCe signal doit être utilisé EN PRIORITÉ comme accroche naturelle dans le message.` : ""}
 
+${offer ? `## Domaine de l'expéditeur (NE PAS mentionner dans le message)\n\nL'expéditeur (${userName}) propose : ${offer}\n\nCette information est un GUIDE INTERNE pour orienter le SUJET de la conversation. Le message doit graviter autour de ce domaine (poser des questions en lien avec ce sujet, demander un avis sur ce domaine). Mais il ne faut JAMAIS mentionner l'offre, le produit ou le service directement. Le prospect ne doit pas deviner ce que l'expéditeur vend.` : ""}
+
 ## Stratégies disponibles (choisis la meilleure automatiquement)
 
 Analyse le profil, l'objectif et le signal pour choisir la stratégie la plus naturelle :
@@ -84,6 +87,7 @@ Ne mentionne PAS la stratégie dans le message. Elle est un guide interne.
    - Son parcours professionnel qui le rend légitime sur un sujet
    - Une compétence spécifique en lien avec le domaine
    ${signal ? "- Le signal détecté (PRIORITAIRE)" : ""}
+   ${offer ? "- Le sujet doit être en rapport avec le domaine de l'expéditeur (guide interne, ne pas mentionner l'offre)" : ""}
 4. Rédige un message Mom Test : tu viens demander de l'aide à un expert, pas pitcher un produit
 
 ## Règles de rédaction STRICTES

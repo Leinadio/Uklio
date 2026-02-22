@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
 
   const prospect = await prisma.prospect.findFirst({
     where: { id: prospectId, userId: session.user.id },
+    include: { campaign: { select: { offer: true } } },
   })
 
   if (!prospect) {
@@ -28,6 +29,7 @@ export async function POST(request: NextRequest) {
 
   const objective = body.objective || prospect.objective
   const signal = body.signal || prospect.signal || ""
+  const offer = prospect.campaign?.offer || ""
 
   if (!objective) {
     return NextResponse.json({ error: "Objectif manquant" }, { status: 400 })
@@ -55,7 +57,8 @@ export async function POST(request: NextRequest) {
     session.user.name,
     fullProspect,
     objective,
-    signal
+    signal,
+    offer
   )
 
   try {

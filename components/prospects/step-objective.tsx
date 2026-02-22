@@ -9,8 +9,15 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { OBJECTIVE_LABELS } from "@/lib/constants"
-import { Target, Phone, Calendar, ShoppingCart, Star } from "lucide-react"
+import { Target, Phone, Calendar, ShoppingCart, Star, Megaphone } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { WizardState, ObjectiveType } from "@/lib/wizard-types"
 
@@ -21,17 +28,76 @@ const OBJECTIVES: { value: ObjectiveType; label: string; icon: typeof Phone }[] 
   { value: "TESTIMONIAL", label: OBJECTIVE_LABELS.TESTIMONIAL, icon: Star },
 ]
 
+interface CampaignOption {
+  id: string
+  name: string
+  offer: string
+}
+
 interface Props {
   state: WizardState
   dispatch: React.Dispatch<
     | { type: "SELECT_OBJECTIVE"; objective: ObjectiveType }
     | { type: "SET_SIGNAL"; signal: string }
+    | { type: "SET_CAMPAIGN"; campaignId: string }
   >
+  campaigns: CampaignOption[]
 }
 
-export function StepObjective({ state, dispatch }: Props) {
+export function StepObjective({ state, dispatch, campaigns }: Props) {
+  const selectedCampaign = campaigns.find((c) => c.id === state.campaignId)
+
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Megaphone className="h-5 w-5 text-primary" />
+            Campagne
+          </CardTitle>
+          <CardDescription>
+            Dans quelle campagne souhaitez-vous ajouter {state.firstName}{" "}
+            {state.lastName} ?
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {campaigns.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Aucune campagne créée.{" "}
+              <a href="/campaigns" className="text-primary hover:underline">
+                Créez votre première campagne
+              </a>{" "}
+              pour commencer.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              <Select
+                value={state.campaignId}
+                onValueChange={(value) =>
+                  dispatch({ type: "SET_CAMPAIGN", campaignId: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez une campagne" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campaigns.map((campaign) => (
+                    <SelectItem key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedCampaign && (
+                <p className="text-xs text-muted-foreground">
+                  Offre : {selectedCampaign.offer}
+                </p>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { toast } from "sonner"
 import { updateProspectStrategy } from "@/actions/prospects"
+import { assignProspectToCampaign } from "@/actions/campaigns"
 import { StepObjective } from "./step-objective"
 import { SequenceDisplay } from "./sequence-display"
 import { ArrowLeft, Loader2 } from "lucide-react"
@@ -15,6 +16,7 @@ type WizardAction =
   | { type: "UPDATE_FIELD"; field: keyof WizardState; value: string }
   | { type: "SELECT_OBJECTIVE"; objective: ObjectiveType }
   | { type: "SET_SIGNAL"; signal: string }
+  | { type: "SET_CAMPAIGN"; campaignId: string }
 
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -24,6 +26,8 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, objective: action.objective }
     case "SET_SIGNAL":
       return { ...state, signal: action.signal }
+    case "SET_CAMPAIGN":
+      return { ...state, campaignId: action.campaignId }
     default:
       return state
   }
@@ -31,12 +35,19 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
 
 const STEPS = ["Objectif", "Message"]
 
+interface CampaignOption {
+  id: string
+  name: string
+  offer: string
+}
+
 interface Props {
   prospectId: string
   initialState: WizardState
+  campaigns: CampaignOption[]
 }
 
-export function ProspectSetupWizard({ prospectId, initialState }: Props) {
+export function ProspectSetupWizard({ prospectId, initialState, campaigns }: Props) {
   const router = useRouter()
   const [state, dispatch] = useReducer(reducer, initialState)
   const [step, setStep] = useState(0)
@@ -44,15 +55,23 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
 
   async function handleGenerateMessage() {
     if (!state.objective) return
+    if (!state.campaignId) {
+      toast.error("Sélectionnez une campagne")
+      return
+    }
 
     setLoading(true)
-    const result = await updateProspectStrategy(prospectId, {
-      objective: state.objective as ObjectiveType,
-      signal: state.signal,
-    })
 
-    if (result?.error) {
-      toast.error(result.error)
+    const [strategyResult, campaignResult] = await Promise.all([
+      updateProspectStrategy(prospectId, {
+        objective: state.objective as ObjectiveType,
+        signal: state.signal,
+      }),
+      assignProspectToCampaign(prospectId, state.campaignId),
+    ])
+
+    if (strategyResult?.error || campaignResult?.error) {
+      toast.error(strategyResult?.error || campaignResult?.error)
       setLoading(false)
       return
     }
@@ -86,7 +105,13 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
         </div>
       </div>
 
-      {step === 0 && <StepObjective state={state} dispatch={dispatch} />}
+      {step === 0 && (
+        <StepObjective
+          state={state}
+          dispatch={dispatch}
+          campaigns={campaigns}
+        />
+      )}
       {step === 1 && (
         <SequenceDisplay
           prospectId={prospectId}
@@ -107,7 +132,7 @@ export function ProspectSetupWizard({ prospectId, initialState }: Props) {
 
           <Button
             onClick={handleGenerateMessage}
-            disabled={!state.objective || loading}
+            disabled={!state.objective || !state.campaignId || loading}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Générer le message

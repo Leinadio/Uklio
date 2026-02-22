@@ -20,4 +20,5 @@ export interface WizardState {
   connectionCount: string
   objective: ObjectiveType | ""
   signal: string
+  campaignId: string
 }

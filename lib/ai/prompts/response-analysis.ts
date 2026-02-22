@@ -11,6 +11,7 @@ export function buildResponseAnalysisPrompt(
   prospect: ProspectData,
   objective: string,
   signal: string,
+  offer: string,
   conversationHistory: Message[],
   prospectResponse: string
 ): string {
@@ -38,6 +39,7 @@ ${prospect.headline ? `- Headline : ${prospect.headline}` : ""}
 
 - Objectif final (guide interne, ne pas mentionner) : ${objective}
 ${signal ? `- Signal d'approche : ${signal}` : ""}
+${offer ? `- Domaine de l'expéditeur (guide interne, ne pas mentionner) : ${offer}` : ""}
 
 ## Historique de la conversation
 

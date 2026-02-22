@@ -22,6 +22,7 @@ model User {
 
   sessions      Session[]
   accounts      Account[]
+  campaigns     Campaign[]
   prospects     Prospect[]
   notifications Notification[]
 }
@@ -86,6 +87,21 @@ enum Objective {
   TESTIMONIAL
 }
 
+model Campaign {
+  id    String @id @default(cuid())
+  name  String
+  offer String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prospects Prospect[]
+
+  @@index([userId])
+}
+
 model Prospect {
   id        String         @id @default(cuid())
   status    ProspectStatus @default(NEW)
@@ -123,6 +139,8 @@ model Prospect {
 
   userId       String
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaignId   String?
+  campaign     Campaign?     @relation(fields: [campaignId], references: [id])
   conversation Conversation?
 }
 

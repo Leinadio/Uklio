@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation"
 import { getSession } from "@/lib/get-session"
 import { getProspect } from "@/actions/prospects"
+import { getCampaigns } from "@/actions/campaigns"
 import { ProspectSetupWizard } from "@/components/prospects/prospect-setup-wizard"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
@@ -15,7 +16,10 @@ export default async function ProspectSetupPage({
   if (!session) redirect("/login")
 
   const { prospectId } = await params
-  const prospect = await getProspect(prospectId)
+  const [prospect, campaigns] = await Promise.all([
+    getProspect(prospectId),
+    getCampaigns(),
+  ])
 
   if (!prospect) notFound()
 
@@ -43,6 +47,7 @@ export default async function ProspectSetupPage({
     connectionCount: prospect.connectionCount?.toString() ?? "",
     objective: prospect.objective ?? "",
     signal: prospect.signal ?? "",
+    campaignId: prospect.campaignId ?? "",
   }
 
   return (
@@ -66,6 +71,7 @@ export default async function ProspectSetupPage({
       <ProspectSetupWizard
         prospectId={prospectId}
         initialState={initialState}
+        campaigns={campaigns.map((c) => ({ id: c.id, name: c.name, offer: c.offer }))}
       />
     </div>
   )
